@@ -17,6 +17,7 @@ dependencies {
 
     implementation("org.slf4j:slf4j-simple:1.7.32")
 
+    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("com.beust:klaxon:5.5")
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")
 }

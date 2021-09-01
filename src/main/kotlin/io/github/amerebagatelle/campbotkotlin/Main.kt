@@ -7,18 +7,22 @@ import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
+import dev.kord.rest.builder.message.EmbedBuilder.Limits.title
 import dev.kord.rest.request.KtorRequestException
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
+import io.github.cdimascio.dotenv.dotenv
 
 const val test = false
 
 @KordPreview
 fun main() {
+    val dotenv = dotenv()
+    val token = dotenv["TOKEN"]
+
     if(!test) {
-        val token = "Njk2NTE0ODkwMzYxMzM5OTM0.Xop2Cg.ev3ezWxSA5rsrhflUHcD-mYzeho"
 
         //val commands = Commands()
         //commands.registerCommands()
