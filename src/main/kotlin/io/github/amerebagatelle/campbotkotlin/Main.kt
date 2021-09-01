@@ -23,10 +23,6 @@ fun main() {
     val token = dotenv["TOKEN"]
 
     if(!test) {
-
-        //val commands = Commands()
-        //commands.registerCommands()
-
         bot(token) {
             prefix { "&" }
         }
