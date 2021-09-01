@@ -9,7 +9,7 @@ intents.members = True
 
 command_prefix='$'
 bot = commands.Bot(command_prefix=command_prefix, intents=intents)
-TOKEN = "Nzk0NjYxMzMwNzExNjA5MzU1.X--ECQ.dOy1Bi5v8is426W9JgLA2xb3EKE"
+TOKEN = ""
 
 animal_categories = [
         "cat", 
