@@ -79,7 +79,7 @@ fun quotesCommands() = commands("Quotes") {
     command("createquote", "cq", "cp") {
         description = "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
         execute(QuoteArg, QuoteArg) {
-            val quoteNumber = Quotes.createQuote(args.first, args.second)
+            val quoteNumber = Quotes.createQuote(args.second, args.first)
             respond {
                 title = "Created quote #$quoteNumber"
                 description = String.format("%s - %s", args.first, args.second)
