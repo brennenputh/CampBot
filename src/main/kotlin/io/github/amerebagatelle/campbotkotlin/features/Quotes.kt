@@ -73,32 +73,28 @@ class Quotes {
             return quoteNumber
         }
 
-        fun search(searchTerm : String, byAuthor : Boolean): List<Quote> {
+        fun search(searchTerm: String, byAuthor: Boolean): List<Quote> {
             val quotes = mutableListOf<Quote>()
             JsonReader(FileReader(quoteFile)).use { reader ->
                 reader.beginObject {
-                    while(reader.hasNext()) {
+                    while (reader.hasNext()) {
                         val number = Integer.parseInt(reader.nextName())
                         reader.beginObject {
                             var author = ""
                             var content = ""
-                            while(reader.hasNext()) {
+                            while (reader.hasNext()) {
                                 when (reader.nextName()) {
                                     "author" -> author = reader.nextString()
                                     "content" -> content = reader.nextString()
                                 }
                             }
-                            quotes.add(Quote(number, author, content))
+                            if(if(!byAuthor) FuzzySearch.tokenSetRatio(content, searchTerm) > 50 else author.lowercase() == searchTerm.lowercase()) quotes.add(Quote(number, author, content))
                         }
                     }
                 }
             }
-            val filteredQuotes = quotes.filter { quote ->
-                val matchContent = if(byAuthor) quote.author else quote.content
-                return@filter FuzzySearch.tokenSetRatio(matchContent, searchTerm) > 50
-            }.sortedByDescending { quote -> quote.number }
 
-            return filteredQuotes
+            return quotes.sortedBy { quote -> quote.number }
         }
     }
 
