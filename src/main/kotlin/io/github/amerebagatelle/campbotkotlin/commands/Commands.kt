@@ -9,7 +9,7 @@ import me.jakejmattson.discordkt.api.arguments.AnyArg
 import me.jakejmattson.discordkt.api.arguments.BooleanArg
 import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg
-import me.jakejmattson.discordkt.api.dsl.commands
+import me.jakejmattson.discordkt.api.commands.commands
 import java.io.File
 import java.util.*
 
@@ -20,7 +20,7 @@ fun pictureCommands() = commands("Pictures") {
     command("upload") {
         description = "Upload a picture to the bot.  Expects an attachment.  Example: &upload staff"
         execute(AnyArg) {
-            if(message!!.attachments.isEmpty()) {
+            if(message.attachments.isEmpty()) {
                 respond {
                     title = "Error"
                     description = "Please attach a picture with your message."
@@ -28,7 +28,7 @@ fun pictureCommands() = commands("Pictures") {
                 }
             }
 
-            val success = Pictures.upload(args.first, message!!.attachments)
+            val success = Pictures.upload(args.first, message.attachments)
 
             if(success) {
                 respond {

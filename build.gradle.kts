@@ -10,10 +10,11 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
-    implementation("me.jakejmattson:DiscordKt:0.22.0")
+    implementation("me.jakejmattson:DiscordKt:0.23.0-SNAPSHOT")
 
     implementation("org.slf4j:slf4j-simple:1.7.32")
 
