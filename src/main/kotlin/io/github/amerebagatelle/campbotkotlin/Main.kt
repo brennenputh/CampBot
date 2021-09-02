@@ -9,6 +9,7 @@ import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.builder.message.EmbedBuilder.Limits.title
 import dev.kord.rest.request.KtorRequestException
+import dev.kord.x.emoji.Emojis
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
@@ -25,6 +26,9 @@ fun main() {
     if(!test) {
         bot(token) {
             prefix { "&" }
+            configure {
+                theme = java.awt.Color(0, 255, 0)
+            }
         }
     } else {
         test()
