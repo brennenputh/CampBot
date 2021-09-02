@@ -1,10 +1,16 @@
 package io.github.amerebagatelle.campbotkotlin.commands
 
 import dev.kord.common.Color
+import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.entity.Message
+import dev.kord.core.kordLogger
+import dev.kord.rest.builder.message.EmbedBuilder
+import dev.kord.rest.builder.message.create.embed
+import io.github.amerebagatelle.campbotkotlin.Permissions
 import io.github.amerebagatelle.campbotkotlin.features.Pictures
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
+import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.arguments.AnyArg
 import me.jakejmattson.discordkt.api.arguments.BooleanArg
 import me.jakejmattson.discordkt.api.arguments.IntegerArg
@@ -12,6 +18,8 @@ import me.jakejmattson.discordkt.api.arguments.QuoteArg
 import me.jakejmattson.discordkt.api.commands.commands
 import java.io.File
 import java.util.*
+import kotlin.io.path.Path
+import kotlin.system.exitProcess
 
 val random = Random()
 
@@ -77,6 +85,14 @@ fun quotesCommands() = commands("Quotes") {
                 description = String.format("%s - %s", args.first, args.second)
                 color = Color(0, 255, 0)
             }
+            if(quoteNumber.toInt() % 100 == 0) {
+                channel.createMessage {
+                    embed {
+                        title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
+                    }
+                    addFile(Path("./quotes.json"))
+                }
+            }
         }
     }
     command("quote") {
@@ -129,6 +145,33 @@ fun quotesCommands() = commands("Quotes") {
                     description = "Did not find any matches for your query."
                     color = Color(255, 0, 0)
                 }
+            }
+        }
+    }
+}
+
+@Suppress("unused")
+fun utilityCommands() = commands("Utility", Permissions.BOT_OWNER) {
+    command("shutdown") {
+        description = "Shut down the bot."
+        execute {
+            respond {
+                title = "Shutting down in five seconds..."
+                color = Color(255, 0, 0)
+            }
+            delay(5000)
+            message.kord.shutdown()
+            exitProcess(0)
+        }
+    }
+    command("quotesfile") {
+        description = "Get the quotes file from the bot."
+        execute {
+            channel.createMessage {
+                embed {
+                    title = "The quote file for you..."
+                }
+                addFile(Path("./quotes.json"))
             }
         }
     }

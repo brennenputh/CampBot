@@ -28,6 +28,7 @@ fun main() {
             prefix { "&" }
             configure {
                 theme = java.awt.Color(0, 255, 0)
+                permissions(commandDefault = Permissions.EVERYONE)
             }
         }
     } else {
