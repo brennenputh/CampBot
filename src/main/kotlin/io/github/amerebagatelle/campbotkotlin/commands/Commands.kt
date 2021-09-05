@@ -1,11 +1,7 @@
 package io.github.amerebagatelle.campbotkotlin.commands
 
 import dev.kord.common.Color
-import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.channel.createMessage
-import dev.kord.core.entity.Message
-import dev.kord.core.kordLogger
-import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.rest.builder.message.create.embed
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import io.github.amerebagatelle.campbotkotlin.features.Pictures
@@ -34,17 +30,17 @@ fun pictureCommands() = commands("Pictures") {
                     description = "Please attach a picture with your message."
                     color = Color(255, 0, 0)
                 }
-            }
-
-            val success = Pictures.upload(args.first, message.attachments)
-
-            if(success) {
-                respond {
-                    title = "Success!  Picture(s) uploaded."
-                }
             } else {
-                respond {
-                    title = "Failure.  Ping bot owner to fix the bot."
+                val success = Pictures.upload(args.first, message.attachments)
+
+                if (success) {
+                    respond {
+                        title = "Success!  Picture(s) uploaded."
+                    }
+                } else {
+                    respond {
+                        title = "Failure.  Ping bot owner to fix the bot."
+                    }
                 }
             }
         }
