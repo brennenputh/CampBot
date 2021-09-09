@@ -9,12 +9,11 @@ import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.builder.message.EmbedBuilder.Limits.title
 import dev.kord.rest.request.KtorRequestException
-import dev.kord.x.emoji.Emojis
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
+import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
-import io.github.cdimascio.dotenv.dotenv
 
 const val test = false
 
@@ -27,6 +26,7 @@ fun main() {
         bot(token) {
             prefix { "&" }
             configure {
+                commandReaction = null
                 theme = java.awt.Color(0, 255, 0)
                 permissions(commandDefault = Permissions.EVERYONE)
             }
@@ -43,7 +43,7 @@ fun test() {
     }
 }
 
-val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(.*?)/(.*?)/(.*?)$")
+val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
 val quoteInlineRegex = Regex("\\{#(\\d+)}")
 
 @Suppress("unused")
@@ -58,10 +58,10 @@ fun messageListener() = listeners {
 
                 val server = kord.getGuild(serverId)
                 val grabbedChannel = server?.getChannelOf<TextChannel>(channelId)
-                val message = grabbedChannel?.getMessage(messageId)
-                message?.channel?.createEmbed {
-                    title = "Quoted from " + message.author?.username
-                    description = message.content
+                val grabbedMessage = grabbedChannel?.getMessage(messageId)
+                message.channel.createEmbed {
+                    title = "Quoted from " + grabbedMessage?.author?.username
+                    description = grabbedMessage?.content
                 }
             } catch (e: KtorRequestException) {
                 val error = message.channel.createEmbed {

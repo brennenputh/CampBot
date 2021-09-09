@@ -3,6 +3,8 @@ package io.github.amerebagatelle.campbotkotlin.commands
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
+import dev.kord.x.emoji.Emojis
+import dev.kord.x.emoji.toReaction
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import io.github.amerebagatelle.campbotkotlin.features.Pictures
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
@@ -75,6 +77,8 @@ fun quotesCommands() = commands("Quotes") {
     command("createquote", "cq", "cp") {
         description = "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
         execute(QuoteArg, QuoteArg) {
+            message.addReaction(Emojis.eyes.toReaction())
+
             val quoteNumber = Quotes.createQuote(args.second, args.first)
             respond {
                 title = "Created quote #$quoteNumber"
@@ -94,6 +98,7 @@ fun quotesCommands() = commands("Quotes") {
     command("quote") {
         description = "Get a quote.  Quotes are found by number.  Example: &quote 1"
         execute(IntegerArg) {
+
             val quote = Quotes.findQuote(args.first)
             if(quote != null) {
                 respond {
