@@ -7,7 +7,6 @@ import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
-import dev.kord.rest.builder.message.EmbedBuilder.Limits.title
 import dev.kord.rest.request.KtorRequestException
 import io.github.amerebagatelle.campbotkotlin.features.Quotes
 import io.github.cdimascio.dotenv.dotenv
@@ -17,12 +16,15 @@ import me.jakejmattson.discordkt.api.dsl.listeners
 
 const val test = false
 
+var chaosChannelId: Long = 0
+
 @KordPreview
 fun main() {
     val dotenv = dotenv()
     val token = dotenv["TOKEN"]
+    chaosChannelId = dotenv["CHAOS_CHANNEL_ID"].toLong()
 
-    if(!test) {
+    if (!test) {
         bot(token) {
             prefix { "&" }
             configure {
@@ -88,6 +90,14 @@ fun messageListener() = listeners {
                     description = "Could not find quote, does it exist?"
                     color = Color(255, 0, 0)
                 }
+            }
+        }
+
+        if (message.content.contains("productiv", ignoreCase = true) && message.channelId.value == chaosChannelId) {
+            message.channel.createEmbed {
+                title = "RULES"
+                description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
+                color = Color(255, 0, 0)
             }
         }
     }

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.github.amerebagatelle"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
