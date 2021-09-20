@@ -14,8 +14,6 @@ import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
 
-const val test = false
-
 var chaosChannelId: Long = 0
 
 @KordPreview
@@ -24,24 +22,13 @@ fun main() {
     val token = dotenv["TOKEN"]
     chaosChannelId = dotenv["CHAOS_CHANNEL_ID"].toLong()
 
-    if (!test) {
-        bot(token) {
-            prefix { "&" }
-            configure {
-                commandReaction = null
-                theme = java.awt.Color(0, 255, 0)
-                permissions(commandDefault = Permissions.EVERYONE)
-            }
+    bot(token) {
+        prefix { "&" }
+        configure {
+            commandReaction = null
+            theme = java.awt.Color(0, 255, 0)
+            permissions(commandDefault = Permissions.EVERYONE)
         }
-    } else {
-        test()
-    }
-}
-
-fun test() {
-    val quotes = Quotes.search("nothing", false)
-    for (quote in quotes) {
-        println(quote.author + " " + quote.content + " " + quote.number)
     }
 }
 
