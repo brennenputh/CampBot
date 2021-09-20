@@ -94,10 +94,7 @@ fun messageListener() = listeners {
         }
 
         if (message.channelId.value == chaosChannelId) {
-            if (message.content.contains("productiv", true) || message.content.contains(
-                    "maniac",
-                    true
-                )
+            if (message.content.contains("productiv", true) || message.content.contains("maniac", true)
             ) message.channel.createEmbed {
                 title = "RULES"
                 description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
