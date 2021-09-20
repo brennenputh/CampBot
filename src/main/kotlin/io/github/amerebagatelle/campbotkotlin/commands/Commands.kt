@@ -15,11 +15,11 @@ import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg
 import me.jakejmattson.discordkt.api.commands.commands
 import java.io.File
-import java.util.*
 import kotlin.io.path.Path
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
-val random = Random()
+val random = Random.Default
 
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
