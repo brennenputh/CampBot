@@ -23,17 +23,17 @@ val random = Random()
 
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
-    command("upload") {
+    globalCommand("upload") {
         description = "Upload a picture to the bot.  Expects an attachment.  Example: &upload staff"
         execute(AnyArg) {
-            if(message.attachments.isEmpty()) {
+            if (message!!.attachments.isEmpty()) {
                 respond {
                     title = "Error"
                     description = "Please attach a picture with your message."
                     color = Color(255, 0, 0)
                 }
             } else {
-                val success = Pictures.upload(args.first, message.attachments)
+                val success = Pictures.upload(args.first, message!!.attachments)
 
                 if (success) {
                     respond {
@@ -41,13 +41,13 @@ fun pictureCommands() = commands("Pictures") {
                     }
                 } else {
                     respond {
-                        title = "Failure.  Ping bot owner to fix the bot."
+                        title = "Failure.  Contact bot owner to fix the bot."
                     }
                 }
             }
         }
     }
-    command("categories") {
+    globalCommand("categories") {
         description = "Get the list of available categories of pictures.  Example: &categories"
         execute {
             val dirs = File("pictures/").list()!!
@@ -62,7 +62,7 @@ fun pictureCommands() = commands("Pictures") {
             }
         }
     }
-    command("post") {
+    globalCommand("post") {
         description = "Get a picture.  Example: &post staff"
         execute(AnyArg) {
             channel.createMessage {
@@ -74,10 +74,11 @@ fun pictureCommands() = commands("Pictures") {
 
 @Suppress("unused")
 fun quotesCommands() = commands("Quotes") {
-    command("createquote", "cq", "cp") {
-        description = "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
+    globalCommand("createquote", "cq", "cp") {
+        description =
+            "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
         execute(QuoteArg, QuoteArg) {
-            message.addReaction(Emojis.eyes.toReaction())
+            message!!.addReaction(Emojis.eyes.toReaction())
 
             val quoteNumber = Quotes.createQuote(args.second, args.first)
             respond {
@@ -85,7 +86,7 @@ fun quotesCommands() = commands("Quotes") {
                 description = String.format("%s - %s", args.first, args.second)
                 color = Color(0, 255, 0)
             }
-            if(quoteNumber.toInt() % 100 == 0) {
+            if (quoteNumber.toInt() % 100 == 0) {
                 channel.createMessage {
                     embed {
                         title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
@@ -95,12 +96,11 @@ fun quotesCommands() = commands("Quotes") {
             }
         }
     }
-    command("quote") {
+    globalCommand("quote") {
         description = "Get a quote.  Quotes are found by number.  Example: &quote 1"
         execute(IntegerArg) {
-
             val quote = Quotes.findQuote(args.first)
-            if(quote != null) {
+            if (quote != null) {
                 respond {
                     title = "Quote #" + quote.number
                     description = String.format("%s - %s", quote.content, quote.author)
@@ -115,10 +115,10 @@ fun quotesCommands() = commands("Quotes") {
             }
         }
     }
-    command("randomquote") {
+    globalCommand("randomquote") {
         description = "Get a random quote.  Example: &randomquote"
         execute {
-            val quote = Quotes.findQuote(random.nextInt(Quotes.quoteTotal()-1)+1)!!
+            val quote = Quotes.findQuote(random.nextInt(Quotes.quoteTotal() - 1) + 1)!!
             respond {
                 title = "Quote #" + quote.number
                 description = String.format("%s - %s", quote.content, quote.author)
@@ -126,15 +126,17 @@ fun quotesCommands() = commands("Quotes") {
             }
         }
     }
-    command("search") {
-        description = "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
+    globalCommand("search") {
+        description =
+            "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
         execute(QuoteArg, BooleanArg.optional(false)) {
             val quotes = Quotes.search(args.first, args.second).take(20)
             val stringBuilder = StringBuilder()
             for (quote in quotes) {
-                stringBuilder.append("#").append(quote.number).append(": ").append(quote.content).append(" - ").append(quote.author).append("\n")
+                stringBuilder.append("#").append(quote.number).append(": ").append(quote.content).append(" - ")
+                    .append(quote.author).append("\n")
             }
-            if(quotes.isNotEmpty()) {
+            if (quotes.isNotEmpty()) {
                 respond {
                     title = "Found entries for search term \"" + args.first + "\""
                     description = stringBuilder.toString()
@@ -153,7 +155,7 @@ fun quotesCommands() = commands("Quotes") {
 
 @Suppress("unused")
 fun utilityCommands() = commands("Utility", Permissions.BOT_OWNER) {
-    command("shutdown") {
+    globalCommand("shutdown") {
         description = "Shut down the bot."
         execute {
             respond {
@@ -161,11 +163,11 @@ fun utilityCommands() = commands("Utility", Permissions.BOT_OWNER) {
                 color = Color(255, 0, 0)
             }
             delay(5000)
-            message.kord.shutdown()
+            message!!.kord.shutdown()
             exitProcess(0)
         }
     }
-    command("quotesfile") {
+    globalCommand("quotesfile") {
         description = "Get the quotes file from the bot."
         execute {
             channel.createMessage {
