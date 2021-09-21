@@ -130,17 +130,35 @@ fun quotesCommands() = commands("Quotes") {
         description =
             "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
         execute(QuoteArg, BooleanArg.optional(false)) {
-            val quotes = Quotes.search(args.first, args.second).take(20)
-            val stringBuilder = StringBuilder()
-            for (quote in quotes) {
-                stringBuilder.append("#").append(quote.number).append(": ").append(quote.content).append(" - ")
-                    .append(quote.author).append("\n")
-            }
+            val quotes = Quotes.search(args.first, args.second)
             if (quotes.isNotEmpty()) {
-                respond {
-                    title = "Found entries for search term \"" + args.first + "\""
-                    description = stringBuilder.toString()
-                    color = Color(0, 255, 0)
+                respondMenu {
+                    for (i in quotes.indices step 20) {
+                        val subQuotes = quotes.slice(i..quotes.size - 1).take(20)
+                        val stringBuilder = StringBuilder()
+                        for (quote in subQuotes) {
+                            stringBuilder.append("#").append(quote.number).append(": ").append(quote.content)
+                                .append(" - ")
+                                .append(quote.author).append("\n")
+                        }
+                        page {
+                            title = "Found entries for search term \"" + args.first + "\""
+                            description = stringBuilder.toString()
+                            color = Color(0, 255, 0)
+                        }
+                    }
+
+                    if (quotes.size > 20) {
+                        buttons {
+                            button("Previous Page", Emojis.arrowLeft) {
+                                previousPage()
+                            }
+
+                            button("Next Page", Emojis.arrowRight) {
+                                nextPage()
+                            }
+                        }
+                    }
                 }
             } else {
                 respond {
