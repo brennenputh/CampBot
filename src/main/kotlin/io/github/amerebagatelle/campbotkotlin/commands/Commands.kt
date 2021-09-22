@@ -25,12 +25,12 @@ val random = Random.Default
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
     globalCommand("upload") {
-        description = "Upload a picture to the bot.  Expects an attachment.  Example: &upload staff"
+        description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff"
         execute(AnyArg) {
             if (message!!.attachments.isEmpty()) {
                 respond {
                     title = "Error"
-                    description = "Please attach a picture with your message."
+                    description = "Please attach a file with your message."
                     color = Color(255, 0, 0)
                 }
             } else {
@@ -38,7 +38,7 @@ fun pictureCommands() = commands("Pictures") {
 
                 if (success) {
                     respond {
-                        title = "Success!  Picture(s) uploaded."
+                        title = "Success!  File(s) uploaded."
                     }
                 } else {
                     respond {
@@ -49,7 +49,7 @@ fun pictureCommands() = commands("Pictures") {
         }
     }
     globalCommand("categories") {
-        description = "Get the list of available categories of pictures.  Example: &categories"
+        description = "Get the list of available categories of files.  Example: &categories"
         execute {
             val dirs = File("pictures/").list()!!
             val stringBuilder = StringBuilder()
@@ -64,7 +64,7 @@ fun pictureCommands() = commands("Pictures") {
         }
     }
     globalCommand("post") {
-        description = "Get a picture.  Example: &post staff"
+        description = "Get a file.  Example: &post staff"
         execute(AnyArg) {
             channel.createMessage {
                 addFile(Pictures.randomPicture(args.first).toPath())
@@ -143,7 +143,7 @@ fun quotesCommands() = commands("Quotes") {
                                 .append(quote.author).append("\n")
                         }
                         page {
-                            title = "Page #${floor(i.toDouble() / 20).toUInt() + 1}:"
+                            title = "Page #${floor(i.toDouble() / 20).toUInt() + 1u}:"
                             description = stringBuilder.toString()
                             color = Color(0, 255, 0)
                         }
