@@ -89,7 +89,7 @@ class Quotes {
                                 }
                             }
                             val relevance = FuzzySearch.tokenSetRatio(content, searchTerm)
-                            if (if (!byAuthor) relevance > 50 else author.lowercase() == searchTerm.lowercase()) quotes.add(
+                            if (if (!byAuthor) relevance > 50 else author.contains(searchTerm, true)) quotes.add(
                                 Pair(relevance, Quote(number, author, content))
                             )
                         }
