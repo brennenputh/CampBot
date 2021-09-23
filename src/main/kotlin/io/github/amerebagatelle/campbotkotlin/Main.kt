@@ -84,11 +84,20 @@ fun messageListener() = listeners {
         }
 
         if (message.channelId.value == chaosChannelId) {
-            if (message.content.contains("productiv", true) || message.content.contains("maniac", true)
-            ) message.channel.createEmbed {
-                title = "RULES"
-                description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
-                color = Color(255, 0, 0)
+            if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
+                message.channel.createEmbed {
+                    title = "RULES"
+                    description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
+                    color = Color(255, 0, 0)
+                }
+            }
+
+            if (message.content.contains("google", true)) {
+                message.channel.createEmbed {
+                    title = "THE GOOOOOOOOOGLE"
+                    description = "NOT THE GOOGLE"
+                    color = Color(255, 0, 0)
+                }
             }
         }
     }
