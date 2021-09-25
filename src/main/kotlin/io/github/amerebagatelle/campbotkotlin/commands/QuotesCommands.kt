@@ -11,6 +11,7 @@ import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg
 import me.jakejmattson.discordkt.api.commands.commands
 import kotlin.io.path.Path
+import kotlin.math.floor
 import kotlin.random.Random
 
 @Suppress("unused")
@@ -83,7 +84,7 @@ fun quotesCommands() = commands("Quotes") {
                                 .append(quote.author).append("\n")
                         }
                         page {
-                            title = "Page #${Math.floor(i.toDouble() / 20).toUInt() + 1u}:"
+                            title = "Page #${floor(i.toDouble() / 20) + 1}:"
                             description = stringBuilder.toString()
                             color = Color(0, 255, 0)
                         }
