@@ -116,7 +116,7 @@ fun quotesCommands() = commands("Quotes") {
             }
         }
     }
-    globalCommand("randomquote") {
+    globalCommand("randomquote", "rq") {
         description = "Get a random quote.  Example: &randomquote"
         execute {
             val quote = Quotes.findQuote(random.nextInt(Quotes.quoteTotal() - 1) + 1)!!
