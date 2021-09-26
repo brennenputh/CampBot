@@ -13,6 +13,7 @@ import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
+import me.jakejmattson.discordkt.api.dsl.precondition
 
 var chaosChannelId: Long = 0
 
@@ -33,6 +34,11 @@ fun main() {
             watching("for your command")
         }
     }
+}
+
+@Suppress("unused")
+fun logPrecondition() = precondition {
+    println(String.format("Command: %s  User: %s (%s)  Channel: %s (%s)", command?.name, author.username, author.id.asString, channel.data.name.value ?: "DM", channel.id.asString))
 }
 
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
