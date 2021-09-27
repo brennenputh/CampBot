@@ -8,7 +8,7 @@ import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
-import io.github.amerebagatelle.campbotkotlin.features.Quotes
+import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot

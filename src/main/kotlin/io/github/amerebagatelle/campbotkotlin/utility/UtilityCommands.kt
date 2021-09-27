@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin.commands
+package io.github.amerebagatelle.campbotkotlin.utility
 
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage

@@ -1,11 +1,11 @@
-package io.github.amerebagatelle.campbotkotlin.commands
+package io.github.amerebagatelle.campbotkotlin.utility
 
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
-import io.github.amerebagatelle.campbotkotlin.features.Quotes
+import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import me.jakejmattson.discordkt.api.arguments.BooleanArg
 import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg

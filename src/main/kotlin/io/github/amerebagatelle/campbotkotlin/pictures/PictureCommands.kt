@@ -1,8 +1,8 @@
-package io.github.amerebagatelle.campbotkotlin.commands
+package io.github.amerebagatelle.campbotkotlin.utility
 
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
-import io.github.amerebagatelle.campbotkotlin.features.Pictures
+import io.github.amerebagatelle.campbotkotlin.pictures.Pictures
 import me.jakejmattson.discordkt.api.arguments.AnyArg
 import me.jakejmattson.discordkt.api.commands.commands
 import java.io.File

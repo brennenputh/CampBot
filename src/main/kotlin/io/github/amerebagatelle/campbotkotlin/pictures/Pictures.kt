@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin.features
+package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.core.entity.Attachment
 import java.io.File

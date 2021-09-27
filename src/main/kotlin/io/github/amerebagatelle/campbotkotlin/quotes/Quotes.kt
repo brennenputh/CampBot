@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin.features
+package io.github.amerebagatelle.campbotkotlin.quotes
 
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
