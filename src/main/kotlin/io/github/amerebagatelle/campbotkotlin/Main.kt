@@ -18,15 +18,15 @@ import me.jakejmattson.discordkt.api.dsl.precondition
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-var chaosRoleId: Long = 0
-var chaosChannelId: Long = 0
+lateinit var chaosRoleId: Snowflake
+lateinit var chaosChannelId: Snowflake
 
 @KordPreview
 fun main() {
     val dotenv = dotenv()
     val token = dotenv["TOKEN"]
-    chaosRoleId = dotenv["CHAOS_ROLE_ID"].toLong()
-    chaosChannelId = dotenv["CHAOS_CHANNEL_ID"].toLong()
+    chaosRoleId = Snowflake(dotenv["CHAOS_ROLE_ID"].toLong())
+    chaosChannelId = Snowflake(dotenv["CHAOS_CHANNEL_ID"].toLong())
 
     bot(token) {
         prefix { "&" }
@@ -94,7 +94,7 @@ fun messageListener() = listeners {
             }
         }
 
-        if (message.channelId.value == chaosChannelId) {
+        if (message.channelId == chaosChannelId) {
             if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
                 message.channel.createEmbed {
                     title = "RULES"
@@ -102,7 +102,7 @@ fun messageListener() = listeners {
                     color = Color(255, 0, 0)
                 }
 
-                val chaosRole = getGuild()?.getRole(Snowflake(chaosRoleId))
+                val chaosRole = getGuild()?.getRole(chaosRoleId)
 
                 if (member?.roles!!.any { role -> role == chaosRole }) {
                     val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
