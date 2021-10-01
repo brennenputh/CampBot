@@ -107,7 +107,7 @@ fun messageListener() = listeners {
                 if (member?.roles!!.any { role -> role == chaosRole }) {
                     val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
                         message.id,
-                        "Chaos Rulebreak: " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).slice(0..18)
+                        "Chaos Rulebreak " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).slice(0..18)
                     )
                     thread.join()
                     thread.createMessage("A rule has been broken.  This must be taken to the courts.  " + chaosRole?.mention)
