@@ -3,6 +3,7 @@ package io.github.amerebagatelle.campbotkotlin
 import dev.kord.common.Color
 import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
@@ -14,13 +15,17 @@ import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
 import me.jakejmattson.discordkt.api.dsl.precondition
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+var chaosRoleId: Long = 0
 var chaosChannelId: Long = 0
 
 @KordPreview
 fun main() {
     val dotenv = dotenv()
     val token = dotenv["TOKEN"]
+    chaosRoleId = dotenv["CHAOS_ROLE_ID"].toLong()
     chaosChannelId = dotenv["CHAOS_CHANNEL_ID"].toLong()
 
     bot(token) {
@@ -95,6 +100,17 @@ fun messageListener() = listeners {
                     title = "RULES"
                     description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
                     color = Color(255, 0, 0)
+                }
+
+                val chaosRole = getGuild()?.getRole(Snowflake(chaosRoleId))
+
+                if (member?.roles!!.any { role -> role == chaosRole }) {
+                    val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
+                        message.id,
+                        "Chaos Rulebreak: " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).slice(0..18)
+                    )
+                    thread.join()
+                    thread.createMessage("A rule has been broken.  This must be taken to the courts.  " + chaosRole?.mention)
                 }
             }
 
