@@ -1,11 +1,10 @@
-package io.github.amerebagatelle.campbotkotlin.utility
+package io.github.amerebagatelle.campbotkotlin.quotes
 
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
-import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import me.jakejmattson.discordkt.api.arguments.BooleanArg
 import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg
@@ -22,7 +21,7 @@ fun quotesCommands() = commands("Quotes") {
         execute(QuoteArg, QuoteArg) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
-            val quoteNumber = Quotes.createQuote(args.second, args.first)
+            val quoteNumber = Quotes.createQuote(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator)
             respond {
                 title = "Created quote #$quoteNumber"
                 description = String.format("%s - %s", args.first, args.second)
@@ -46,6 +45,9 @@ fun quotesCommands() = commands("Quotes") {
                 respond {
                     title = "Quote #" + quote.number
                     description = String.format("%s - %s", quote.content, quote.author)
+                    footer {
+                        text = String.format("Quoted by: " + quote.quotedBy)
+                    }
                     color = Color(0, 255, 0)
                 }
             } else {
@@ -64,6 +66,9 @@ fun quotesCommands() = commands("Quotes") {
             respond {
                 title = "Quote #" + quote.number
                 description = String.format("%s - %s", quote.content, quote.author)
+                footer {
+                    text = String.format("Quoted by: " + quote.quotedBy)
+                }
                 color = Color(0, 255, 0)
             }
         }

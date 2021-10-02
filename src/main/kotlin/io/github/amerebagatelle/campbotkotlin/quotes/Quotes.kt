@@ -14,6 +14,7 @@ class Quotes {
         fun findQuote(number: Int): Quote? {
             var author: String? = null
             var content: String? = null
+            var quotedBy: String? = null
             JsonReader(FileReader(quoteFile)).use { reader ->
                 reader.beginObject {
                     while(reader.hasNext()) {
@@ -23,6 +24,7 @@ class Quotes {
                                     when (reader.nextName()) {
                                         "author" -> author = reader.nextString()
                                         "content" -> content = reader.nextString()
+                                        "quotedBy" -> quotedBy = reader.nextString()
                                     }
                                 }
                             }
@@ -38,15 +40,15 @@ class Quotes {
             }
             if(author == null || content == null) return null
 
-            return Quote(number, author!!, content!!)
+            return Quote(number, author!!, content!!, quotedBy ?: "Unknown")
         }
 
-        fun createQuote(author: String, content: String): Number {
+        fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): Number {
             val quoteNumber = quoteTotal() + 1
 
             val json = Klaxon().parseJsonObject(FileReader(quoteFile))
 
-            json[quoteNumber.toString()] = mapOf(Pair("author", author), Pair("content", content))
+            json[quoteNumber.toString()] = mapOf(Pair("author", author), Pair("content", content), Pair("quotedBy", quotedBy))
 
             val writer = FileWriter(quoteFile)
             writer.write(json.toJsonString(true))
@@ -100,5 +102,5 @@ class Quotes {
         }
     }
 
-    class Quote(val number: Int, val author: String, val content: String)
+    class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")
 }
