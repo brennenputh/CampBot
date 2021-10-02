@@ -4,6 +4,8 @@ import dev.kord.core.entity.Attachment
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 class Pictures {
     companion object {
@@ -15,7 +17,7 @@ class Pictures {
                             input.copyTo(output)
                         }
                     }
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     return false
                 }
             }
@@ -23,8 +25,20 @@ class Pictures {
             return true
         }
 
+        private val recentlyPostedPictures = mutableListOf<Int>()
+
         fun randomPicture(category: String): File {
-            return File("pictures/$category/").listFiles()!!.random()
+            val files = File("pictures/$category/").listFiles()!!
+
+            var selectedFileIndex: Int
+            do {
+                selectedFileIndex = Random.Default.nextInt(files.indices)
+            } while (recentlyPostedPictures.contains(selectedFileIndex))
+
+            recentlyPostedPictures.add(selectedFileIndex)
+            if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
+
+            return files[selectedFileIndex]
         }
     }
 }
