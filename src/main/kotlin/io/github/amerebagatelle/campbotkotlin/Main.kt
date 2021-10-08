@@ -49,6 +49,8 @@ fun logPrecondition() = precondition {
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
 val quoteInlineRegex = Regex("\\{#(\\d+)}")
 
+var lastPunishmentThreadTimestamp: Long = 0
+
 @Suppress("unused")
 fun messageListener() = listeners {
     on<MessageCreateEvent> {
@@ -104,13 +106,14 @@ fun messageListener() = listeners {
 
                 val chaosRole = getGuild()?.getRole(chaosRoleId)
 
-                if (member?.roles!!.any { role -> role == chaosRole }) {
+                if (member?.roles!!.any { role -> role == chaosRole } && System.nanoTime() - lastPunishmentThreadTimestamp > 10 * 6e+10) {
                     val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
                         message.id,
                         "Chaos Rulebreak " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).slice(0..18)
                     )
                     thread.join()
                     thread.createMessage("A rule has been broken.  This must be taken to the courts.  " + chaosRole?.mention)
+                    lastPunishmentThreadTimestamp = System.nanoTime()
                 }
             }
 
