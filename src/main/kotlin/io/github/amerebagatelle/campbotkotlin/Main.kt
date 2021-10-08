@@ -49,6 +49,8 @@ fun logPrecondition() = precondition {
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
 val quoteInlineRegex = Regex("\\{#(\\d+)}")
 
+val googleRegex = Regex("[Gg]+[Oo]+[Gg]+[Ll]+[Ee]+")
+
 var lastPunishmentThreadTimestamp: Long = 0
 
 @Suppress("unused")
@@ -117,7 +119,7 @@ fun messageListener() = listeners {
                 }
             }
 
-            if (message.content.contains("google", true)) {
+            if (message.content.contains(googleRegex)) {
                 message.channel.createEmbed {
                     title = "THE GOOOOOOOOOGLE"
                     description = "NOT THE GOOGLE"
