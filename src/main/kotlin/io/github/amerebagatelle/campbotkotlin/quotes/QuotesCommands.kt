@@ -1,7 +1,10 @@
 package io.github.amerebagatelle.campbotkotlin.quotes
 
 import dev.kord.common.Color
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.channel.createMessage
+import dev.kord.core.behavior.getChannelOf
+import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
@@ -9,6 +12,7 @@ import me.jakejmattson.discordkt.api.arguments.BooleanArg
 import me.jakejmattson.discordkt.api.arguments.IntegerArg
 import me.jakejmattson.discordkt.api.arguments.QuoteArg
 import me.jakejmattson.discordkt.api.commands.commands
+import java.io.File
 import kotlin.io.path.Path
 import kotlin.math.floor
 import kotlin.random.Random
@@ -27,7 +31,18 @@ fun quotesCommands() = commands("Quotes") {
                 description = String.format("%s - %s", args.first, args.second)
                 color = Color(0, 255, 0)
             }
-            if (quoteNumber.toInt() % 100 == 0) {
+            if (quoteNumber.toInt() == 1000) {
+                channel.createMessage {
+                    content = "1K QUOTES, LETS GOOOOOOO\n With that out of the way, see #general."
+                }
+                guild?.getChannelOf<GuildMessageChannel>(Snowflake(757774334478778511))?.createMessage {
+                    embed {
+                        title = "1000 QUOTES"
+                        description = File("./1k.txt").readText()
+                    }
+                    addFile(Path("./quotes.json"))
+                }
+            } else if (quoteNumber.toInt() % 100 == 0) {
                 channel.createMessage {
                     embed {
                         title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
