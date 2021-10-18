@@ -104,7 +104,7 @@ fun quotesCommands() = commands("Quotes") {
                                 .append(quote.author).append("\n")
                         }
                         page {
-                            title = "Page #${floor(i.toDouble() / 20) + 1}:"
+                            title = "Page #${(floor(i.toDouble() / 20) + 1).toInt()}:"
                             description = stringBuilder.toString()
                             color = Color(0, 255, 0)
                         }
