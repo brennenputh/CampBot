@@ -43,7 +43,7 @@ class Quotes {
             return Quote(number, author!!, content!!, quotedBy ?: "Unknown")
         }
 
-        fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): Number {
+        fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): Int {
             val quoteNumber = quoteTotal() + 1
 
             val json = Klaxon().parseJsonObject(FileReader(quoteFile))
