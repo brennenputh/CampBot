@@ -15,6 +15,7 @@ import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.api.dsl.bot
 import me.jakejmattson.discordkt.api.dsl.listeners
 import me.jakejmattson.discordkt.api.dsl.precondition
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -45,7 +46,10 @@ fun main() {
 
 @Suppress("unused")
 fun logPrecondition() = precondition {
-    println(String.format("Command: %s  User: %s (%s)  Channel: %s (%s)", command?.name, author.username, author.id.asString, channel.data.name.value ?: "DM", channel.id.asString))
+    val file = File("log/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}.txt")
+    @Suppress("BlockingMethodInNonBlockingContext")
+    file.createNewFile()
+    file.appendText(String.format("Command: %s  User: %s (%s)  Channel: %s (%s)  Timestamp: %s", command?.name, author.username, author.id.asString, channel.data.name.value ?: "DM", channel.id.asString, LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))))
 }
 
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")

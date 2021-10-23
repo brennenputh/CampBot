@@ -46,7 +46,7 @@ fun userUtilityCommands() = commands("Utility") {
         execute(MessageArg(name = "replyTo"), QuoteArg(name = "content")) {
             message?.delete()
             channel.createMessage {
-                content = "${args.first.author?.mention}: ${args.second}"
+                content = "${args.first.author?.mention} ${getMember()?.displayName} replies: ${args.second}"
                 embed {
                     title = "Reply To: ${args.first.jumpLink()}"
                     description = "${args.first.content}"
