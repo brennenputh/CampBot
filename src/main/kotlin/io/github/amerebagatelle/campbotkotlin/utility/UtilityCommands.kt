@@ -5,12 +5,15 @@ import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import kotlinx.coroutines.delay
+import me.jakejmattson.discordkt.api.arguments.MessageArg
+import me.jakejmattson.discordkt.api.arguments.QuoteArg
 import me.jakejmattson.discordkt.api.commands.commands
+import me.jakejmattson.discordkt.api.extensions.jumpLink
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
 @Suppress("unused")
-fun utilityCommands() = commands("Utility", Permissions.BOT_OWNER) {
+fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
     globalCommand("shutdown") {
         description = "Shut down the bot."
         execute {
@@ -32,6 +35,28 @@ fun utilityCommands() = commands("Utility", Permissions.BOT_OWNER) {
                 }
                 addFile(Path("./quotes.json"))
             }
+        }
+    }
+}
+
+@Suppress("unused")
+fun userUtilityCommands() = commands("Utility") {
+    globalCommand("reply") {
+        description = "Reply to a specific message, even if it's in another channel."
+        execute(MessageArg(name = "replyTo"), QuoteArg(name = "content")) {
+            channel.createMessage {
+                content = "${args.first.author?.mention}: ${args.second}"
+                embed {
+                    title = "Reply To: ${args.first.jumpLink()}"
+                    description = "${args.first.content}"
+                }
+            }
+        }
+    }
+    globalCommand("messageArgTest") {
+        description = "Test message arg"
+        execute(MessageArg) {
+            println(args.first.content)
         }
     }
 }
