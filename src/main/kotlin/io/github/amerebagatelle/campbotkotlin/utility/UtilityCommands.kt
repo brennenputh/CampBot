@@ -44,6 +44,7 @@ fun userUtilityCommands() = commands("Utility") {
     globalCommand("reply") {
         description = "Reply to a specific message, even if it's in another channel."
         execute(MessageArg(name = "replyTo"), QuoteArg(name = "content")) {
+            message?.delete()
             channel.createMessage {
                 content = "${args.first.author?.mention}: ${args.second}"
                 embed {
