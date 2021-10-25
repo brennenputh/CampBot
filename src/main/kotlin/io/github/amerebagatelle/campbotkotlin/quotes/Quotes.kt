@@ -17,8 +17,8 @@ class Quotes {
             var quotedBy: String? = null
             JsonReader(FileReader(quoteFile)).use { reader ->
                 reader.beginObject {
-                    while(reader.hasNext()) {
-                        if(reader.nextName() == number.toString()) {
+                    while (reader.hasNext()) {
+                        if (reader.nextName() == number.toString()) {
                             reader.beginObject {
                                 while (reader.hasNext()) {
                                     when (reader.nextName()) {
@@ -30,7 +30,7 @@ class Quotes {
                             }
                         } else {
                             reader.beginObject {
-                                while(reader.hasNext()) {
+                                while (reader.hasNext()) {
                                     reader.nextName()
                                 }
                             }
@@ -38,7 +38,7 @@ class Quotes {
                     }
                 }
             }
-            if(author == null || content == null) return null
+            if (author == null || content == null) return null
 
             return Quote(number, author!!, content!!, quotedBy ?: "Unknown")
         }
@@ -61,9 +61,9 @@ class Quotes {
             var quoteNumber = 0
             JsonReader(FileReader(quoteFile)).use { reader ->
                 reader.beginObject {
-                    while(reader.hasNext()) {
+                    while (reader.hasNext()) {
                         val newNumber = Integer.parseInt(reader.nextName())
-                        if(newNumber > quoteNumber) {
+                        if (newNumber > quoteNumber) {
                             quoteNumber = newNumber
                         }
                         reader.beginObject {

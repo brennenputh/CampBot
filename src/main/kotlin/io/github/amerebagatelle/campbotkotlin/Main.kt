@@ -92,7 +92,7 @@ fun messageListener() = listeners {
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
             val quote = Quotes.findQuote(Integer.parseInt(inline.groupValues[1]))
-            if(quote != null) {
+            if (quote != null) {
                 message.channel.createEmbed {
                     title = "Quote #" + quote.number
                     description = String.format("%s - %s", quote.content, quote.author)
@@ -149,5 +149,4 @@ fun messageListener() = listeners {
             }
         }
     }
-
 }
