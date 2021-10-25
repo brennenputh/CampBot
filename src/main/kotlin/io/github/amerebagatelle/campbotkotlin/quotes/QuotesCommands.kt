@@ -119,3 +119,65 @@ fun quotesCommands() = commands("Quotes") {
         }
     }
 }
+
+@Suppress("unused")
+fun quoteSlashCommands() = commands("Quotes") {
+    slash("screatequote") {
+        description =
+            "Create a quote."
+        execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
+            val quoteNumber = Quotes.createQuote(args.second, args.first, author.username + "#" + author.discriminator)
+            respond {
+                title = "Created quote #$quoteNumber"
+                description = String.format("%s - %s", args.first, args.second)
+                color = Color(0, 255, 0)
+            }
+
+            // On a multiple of 100 quotes, post the quote file
+            if (quoteNumber % 100 == 0) {
+                channel.createMessage {
+                    embed {
+                        title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
+                    }
+                    addFile(Path("./quotes.json"))
+                }
+            }
+        }
+    }
+    slash("squote") {
+        description = "Get a quote."
+        execute(IntegerArg(name = "quoteNumber")) {
+            val quote = Quotes.findQuote(args.first)
+            if (quote != null) {
+                respond {
+                    title = "Quote #" + quote.number
+                    description = String.format("%s - %s", quote.content, quote.author)
+                    footer {
+                        text = String.format("Quoted by: " + quote.quotedBy)
+                    }
+                    color = Color(0, 255, 0)
+                }
+            } else {
+                respond {
+                    title = "Error"
+                    description = "Could not find quote, does it exist?"
+                    color = Color(255, 0, 0)
+                }
+            }
+        }
+    }
+    slash("srandomquote") {
+        description = "Get a random quote."
+        execute {
+            val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
+            respond {
+                title = "Quote #" + quote.number
+                description = String.format("%s - %s", quote.content, quote.author)
+                footer {
+                    text = String.format("Quoted by: " + quote.quotedBy)
+                }
+                color = Color(0, 255, 0)
+            }
+        }
+    }
+}
