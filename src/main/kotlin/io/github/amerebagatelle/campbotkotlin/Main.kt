@@ -49,7 +49,7 @@ fun logPrecondition() = precondition {
     val file = File("log/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}.txt")
     @Suppress("BlockingMethodInNonBlockingContext")
     file.createNewFile()
-    file.appendText(String.format("Command: %s  User: %s (%s)  Channel: %s (%s)  Timestamp: %s\n", command?.name, author.username, author.id.asString, channel.data.name.value ?: "DM", channel.id.asString, LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))))
+    file.appendText("Command: ${command?.name} User: ${author.username} (${author.id.asString})  Channel: ${channel.data.name.value ?: "DM"} (${channel.id.asString})  Timestamp: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))}\n")
 }
 
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
