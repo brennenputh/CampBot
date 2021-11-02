@@ -62,8 +62,8 @@ var lastPrayerRequestTimestamp: Long = 0
 
 @Suppress("unused")
 fun messageListener() = listeners {
+    // Expand discord message links
     on<MessageCreateEvent> {
-        // Check if there are discord links present in the message
         val links = urlRegex.findAll(message.content)
         for (link in links) {
             try {
@@ -87,7 +87,9 @@ fun messageListener() = listeners {
                 error.delete()
             }
         }
-
+    }
+    // Inline quotes
+    on<MessageCreateEvent> {
         // Check for inlined quotes in the message
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
@@ -106,46 +108,48 @@ fun messageListener() = listeners {
                 }
             }
         }
+    }
+    // Auto-create threads in prayer requests
+    on<MessageCreateEvent> {
+        if (message.channelId != prayerRequestsChannelId) return@on
 
-        // Check for chaos rules broken (in chaos only)
-        if (message.channelId == chaosChannelId) {
-            if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
-                message.channel.createEmbed {
-                    title = "RULES"
-                    description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
-                    color = Color(255, 0, 0)
-                }
+        if (System.nanoTime() - lastPrayerRequestTimestamp > 60 * 6e+10) {
+            (message.getChannel() as TextChannel).startPublicThreadWithMessage(
+                message.id,
+                "${message.getAuthorAsMember()?.displayName} ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}"
+            )
+            lastPrayerRequestTimestamp = System.nanoTime()
+        }
+    }
+    // Chaos rules implementation
+    on<MessageCreateEvent> {
+        if (message.channelId != chaosChannelId) return@on
 
-                val chaosRole = getGuild()?.getRole(chaosRoleId)
-
-                if (member?.roles!!.any { role -> role == chaosRole } && System.nanoTime() - lastPunishmentThreadTimestamp > 100 * 6e+10) {
-                    val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
-                        message.id,
-                        "Chaos Rulebreak " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy HH mm"))
-                    )
-                    thread.join()
-                    thread.createMessage("A rule has been broken.  This must be taken to the courts.  " + chaosRole?.mention)
-                    lastPunishmentThreadTimestamp = System.nanoTime()
-                }
+        if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
+            message.channel.createEmbed {
+                title = "RULES"
+                description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
+                color = Color(255, 0, 0)
             }
 
-            if (message.content.contains(googleRegex)) {
-                message.channel.createEmbed {
-                    title = "THE GOOOOOOOOOGLE"
-                    description = "NOT THE GOOGLE"
-                    color = Color(255, 0, 0)
-                }
+            val chaosRole = getGuild()?.getRole(chaosRoleId)
+
+            if (member?.roles!!.any { role -> role == chaosRole } && System.nanoTime() - lastPunishmentThreadTimestamp > 100 * 6e+10) {
+                val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
+                    message.id,
+                    "Chaos Rulebreak " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy HH mm"))
+                )
+                thread.join()
+                thread.createMessage("A rule has been broken.  This must be taken to the courts.  " + chaosRole?.mention)
+                lastPunishmentThreadTimestamp = System.nanoTime()
             }
         }
 
-        // Check for prayer request
-        if (message.channelId == prayerRequestsChannelId) {
-            if (System.nanoTime() - lastPrayerRequestTimestamp > 60 * 6e+10) {
-                (message.getChannel() as TextChannel).startPublicThreadWithMessage(
-                    message.id,
-                    "${message.getAuthorAsMember()?.displayName} ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}"
-                )
-                lastPrayerRequestTimestamp = System.nanoTime()
+        if (message.content.contains(googleRegex)) {
+            message.channel.createEmbed {
+                title = "THE GOOOOOOOOOGLE"
+                description = "NOT THE GOOGLE"
+                color = Color(255, 0, 0)
             }
         }
     }
