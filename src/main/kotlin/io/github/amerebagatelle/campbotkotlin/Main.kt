@@ -5,9 +5,11 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
+import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.request.KtorRequestException
 import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import io.github.cdimascio.dotenv.dotenv
@@ -18,6 +20,7 @@ import me.jakejmattson.discordkt.api.dsl.precondition
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 lateinit var chaosRoleId: Snowflake
 lateinit var chaosChannelId: Snowflake
@@ -59,6 +62,8 @@ val googleRegex = Regex("[Gg]+[Oo]+[Gg]+[Ll]+[Ee]+")
 
 var lastPunishmentThreadTimestamp: Long = 0
 var lastPrayerRequestTimestamp: Long = 0
+
+var lastQuoteOfDayPosted = 0
 
 @Suppress("unused")
 fun messageListener() = listeners {
@@ -151,6 +156,25 @@ fun messageListener() = listeners {
                 description = "NOT THE GOOGLE"
                 color = Color(255, 0, 0)
             }
+        }
+    }
+    // Quote of the day system
+    on<MessageCreateEvent> {
+        val now = LocalDateTime.now()
+        if (now.dayOfMonth != lastQuoteOfDayPosted && now.hour >= 6) {
+            val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
+            message.getGuild().getChannelOf<TextChannel>(chaosChannelId).createMessage {
+                embed {
+                    title = "Quote of the Day: #" + quote.number
+                    description = String.format("%s - %s", quote.content, quote.author)
+                    footer {
+                        text = String.format("Quoted by: " + quote.quotedBy)
+                    }
+                    color = Color(0, 255, 0)
+                }
+            }
+
+            lastQuoteOfDayPosted = now.dayOfMonth
         }
     }
 }
