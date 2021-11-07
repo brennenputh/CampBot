@@ -2,8 +2,8 @@ package io.github.amerebagatelle.campbotkotlin
 
 import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Snowflake
-import me.jakejmattson.discordkt.api.dsl.PermissionContext
-import me.jakejmattson.discordkt.api.dsl.PermissionSet
+import me.jakejmattson.discordkt.dsl.PermissionContext
+import me.jakejmattson.discordkt.dsl.PermissionSet
 
 enum class Permissions : PermissionSet {
     BOT_OWNER {

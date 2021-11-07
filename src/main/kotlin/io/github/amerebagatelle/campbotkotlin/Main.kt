@@ -12,11 +12,13 @@ import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.request.KtorRequestException
 import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
+import io.github.amerebagatelle.campbotkotlin.quotes.createQuoteMessageCommands
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
-import me.jakejmattson.discordkt.api.dsl.bot
-import me.jakejmattson.discordkt.api.dsl.listeners
-import me.jakejmattson.discordkt.api.dsl.precondition
+import kotlinx.coroutines.flow.first
+import me.jakejmattson.discordkt.dsl.bot
+import me.jakejmattson.discordkt.dsl.listeners
+import me.jakejmattson.discordkt.dsl.precondition
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -43,6 +45,9 @@ fun main() {
         }
         presence {
             watching("for your command")
+        }
+        onStart {
+            createQuoteMessageCommands(kord, kord.guilds.first())
         }
     }
 }

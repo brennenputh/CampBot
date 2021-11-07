@@ -5,10 +5,10 @@ import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import kotlinx.coroutines.delay
-import me.jakejmattson.discordkt.api.arguments.MessageArg
-import me.jakejmattson.discordkt.api.arguments.QuoteArg
-import me.jakejmattson.discordkt.api.commands.commands
-import me.jakejmattson.discordkt.api.extensions.jumpLink
+import me.jakejmattson.discordkt.arguments.MessageArg
+import me.jakejmattson.discordkt.arguments.QuoteArg
+import me.jakejmattson.discordkt.commands.commands
+import me.jakejmattson.discordkt.extensions.jumpLink
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
 

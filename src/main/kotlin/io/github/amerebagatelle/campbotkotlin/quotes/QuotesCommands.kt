@@ -5,10 +5,10 @@ import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
-import me.jakejmattson.discordkt.api.arguments.BooleanArg
-import me.jakejmattson.discordkt.api.arguments.IntegerArg
-import me.jakejmattson.discordkt.api.arguments.QuoteArg
-import me.jakejmattson.discordkt.api.commands.commands
+import me.jakejmattson.discordkt.arguments.BooleanArg
+import me.jakejmattson.discordkt.arguments.IntegerArg
+import me.jakejmattson.discordkt.arguments.QuoteArg
+import me.jakejmattson.discordkt.commands.commands
 import kotlin.io.path.Path
 import kotlin.math.floor
 import kotlin.random.Random
