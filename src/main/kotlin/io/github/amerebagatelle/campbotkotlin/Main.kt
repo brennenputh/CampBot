@@ -49,6 +49,9 @@ fun main() {
         onStart {
             createQuoteMessageCommands(kord, kord.guilds.first())
         }
+        handleExceptions {
+            exception.printStackTrace()
+        }
     }
 }
 
