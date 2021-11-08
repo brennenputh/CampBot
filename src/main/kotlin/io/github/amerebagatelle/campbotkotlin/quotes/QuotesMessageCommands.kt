@@ -5,6 +5,7 @@ import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.followUp
 import dev.kord.core.entity.Guild
 import dev.kord.core.event.interaction.MessageCommandInteractionCreateEvent
+import dev.kord.rest.builder.message.create.embed
 import io.github.amerebagatelle.campbotkotlin.info.getInfo
 import me.jakejmattson.discordkt.dsl.listeners
 
@@ -25,10 +26,14 @@ fun quoteMessageCommands() = listeners {
                     response.followUp {
                         content = "User must set real name in the info command before you can create a quote."
                     }
+                    return@on
                 }
                 val quoteNumber = Quotes.createQuote(authorName, message.content, quotedBy = interaction.user.asUser().asMember(interaction.data.guildId.value!!).username)
                 response.followUp {
-                    content = String.format("Created quote %s: %s - %s", quoteNumber, authorName, message.content)
+                    embed {
+                        title = "Quote #$quoteNumber"
+                        description = "$authorName - ${message.content}"
+                    }
                 }
             }
         }
