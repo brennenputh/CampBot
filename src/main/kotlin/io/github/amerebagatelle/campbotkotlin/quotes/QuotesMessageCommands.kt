@@ -12,7 +12,7 @@ import me.jakejmattson.discordkt.dsl.listeners
 lateinit var createQuoteId: Snowflake
 
 suspend fun createQuoteMessageCommands(kord: Kord, guild: Guild) {
-    createQuoteId = kord.createGuildMessageCommand(guild.id, "CreateQuote") {}.id
+    createQuoteId = kord.createGuildMessageCommand(guild.id, "Create Quote") {}.id
 }
 
 @Suppress("unused")
