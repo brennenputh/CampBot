@@ -126,7 +126,7 @@ fun messageListener() = listeners {
     on<MessageCreateEvent> {
         if (message.channelId != prayerRequestsChannelId) return@on
 
-        if (System.nanoTime() - lastPrayerRequestTimestamp > 60 * 6e+10) {
+        if (System.nanoTime() - lastPrayerRequestTimestamp > 10 * 6e+10) {
             (message.getChannel() as TextChannel).startPublicThreadWithMessage(
                 message.id,
                 "${message.getAuthorAsMember()?.displayName} ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}"
