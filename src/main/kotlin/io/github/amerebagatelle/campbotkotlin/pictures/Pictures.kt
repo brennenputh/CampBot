@@ -30,9 +30,9 @@ class Pictures {
         fun randomPicture(category: String): File {
             val files = File("pictures/$category/").listFiles()!!
 
-            var selectedFileIndex: Int
+            var selectedFileIndex = Random.Default.nextInt(files.indices)
             do {
-                selectedFileIndex = Random.Default.nextInt(files.indices)
+                selectedFileIndex++
             } while (recentlyPostedPictures.contains(selectedFileIndex))
 
             recentlyPostedPictures.add(selectedFileIndex)
