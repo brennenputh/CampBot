@@ -33,6 +33,7 @@ class Pictures {
             var selectedFileIndex = Random.Default.nextInt(files.indices)
             do {
                 selectedFileIndex++
+                selectedFileIndex %= files.size
             } while (recentlyPostedPictures.contains(selectedFileIndex))
 
             recentlyPostedPictures.add(selectedFileIndex)
