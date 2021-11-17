@@ -170,6 +170,7 @@ fun messageListener() = listeners {
     on<MessageCreateEvent> {
         val now = LocalDateTime.now()
         if (now.dayOfMonth != lastQuoteOfDayPosted && now.hour >= 6) {
+            lastQuoteOfDayPosted = now.dayOfMonth
             val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
             message.getGuild().getChannelOf<TextChannel>(chaosChannelId).createMessage {
                 embed {
@@ -181,8 +182,6 @@ fun messageListener() = listeners {
                     color = Color(0, 255, 0)
                 }
             }
-
-            lastQuoteOfDayPosted = now.dayOfMonth
         }
     }
 }
