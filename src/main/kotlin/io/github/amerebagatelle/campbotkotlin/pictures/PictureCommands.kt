@@ -52,12 +52,7 @@ fun pictureCommands() = commands("Pictures") {
     }
     globalCommand("post") {
         description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1"
-        execute(AnyArg) {
-            channel.createMessage {
-                addFile(Pictures.randomPicture(args.first).toPath())
-            }
-        }
-        execute(AnyArg, IntegerArg) {
+        execute(AnyArg, IntegerArg.optional(1)) {
             if (args.second > 20) {
                 respond {
                     title = "Error"
