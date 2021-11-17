@@ -31,10 +31,10 @@ class Pictures {
             val files = File("pictures/$category/").listFiles()!!
 
             var selectedFileIndex = Random.Default.nextInt(files.indices)
-            do {
+            while (recentlyPostedPictures.contains(selectedFileIndex)) {
                 selectedFileIndex++
                 selectedFileIndex %= files.size
-            } while (recentlyPostedPictures.contains(selectedFileIndex))
+            }
 
             recentlyPostedPictures.add(selectedFileIndex)
             if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
