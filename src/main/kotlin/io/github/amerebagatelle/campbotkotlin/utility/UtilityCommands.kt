@@ -22,7 +22,6 @@ fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
                 color = Color(255, 0, 0)
             }
             delay(5000)
-            message!!.kord.shutdown()
             exitProcess(0)
         }
     }
