@@ -5,6 +5,7 @@ import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
+import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.BooleanArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
@@ -63,15 +64,25 @@ fun quotesCommands() = commands("Quotes") {
     }
     globalCommand("randomquote", "rq") {
         description = "Get a random quote.  Example: &randomquote"
-        execute {
-            val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
-            respond {
-                title = "Quote #" + quote.number
-                description = String.format("%s - %s", quote.content, quote.author)
-                footer {
-                    text = String.format("Quoted by: " + quote.quotedBy)
+        execute(IntegerArg.optional(1)) {
+            if (args.first > 40) {
+                respond {
+                    title = "Number too large."
+                    description = "Please make number under 40"
                 }
-                color = Color(0, 255, 0)
+                return@execute
+            }
+            repeat(args.first) {
+                val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
+                respond {
+                    title = "Quote #" + quote.number
+                    description = String.format("%s - %s", quote.content, quote.author)
+                    footer {
+                        text = String.format("Quoted by: " + quote.quotedBy)
+                    }
+                    color = Color(0, 255, 0)
+                }
+                delay(3000)
             }
         }
     }
