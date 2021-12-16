@@ -13,7 +13,7 @@ import java.io.File
 fun pictureCommands() = commands("Pictures") {
     globalCommand("upload") {
         description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff"
-        execute(AnyArg) {
+        execute(AnyArg("category")) {
             if (message!!.attachments.isEmpty()) {
                 respond {
                     title = "Error"
@@ -52,7 +52,7 @@ fun pictureCommands() = commands("Pictures") {
     }
     globalCommand("post") {
         description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1"
-        execute(AnyArg, IntegerArg.optional(1)) {
+        execute(AnyArg("category"), IntegerArg("number").optional(1)) {
             if (args.second > 20) {
                 respond {
                     title = "Error"

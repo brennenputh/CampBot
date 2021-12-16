@@ -18,7 +18,7 @@ fun quotesCommands() = commands("Quotes") {
     globalCommand("createquote", "cq", "cp") {
         description =
             "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
-        execute(QuoteArg, QuoteArg) {
+        execute(QuoteArg("quote"), QuoteArg("author")) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
             val quoteNumber = Quotes.createQuote(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator)
@@ -41,7 +41,7 @@ fun quotesCommands() = commands("Quotes") {
     }
     globalCommand("quote") {
         description = "Get a quote.  Quotes are found by number.  Example: &quote 1"
-        execute(IntegerArg) {
+        execute(IntegerArg("quoteNumber")) {
             val quote = Quotes.findQuote(args.first)
             if (quote != null) {
                 respond {
@@ -78,7 +78,7 @@ fun quotesCommands() = commands("Quotes") {
     globalCommand("search") {
         description =
             "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
-        execute(QuoteArg, BooleanArg.optional(false)) {
+        execute(QuoteArg("phrase"), BooleanArg("searchByAuthor").optional(false)) {
             val quotes = Quotes.search(args.first, args.second)
             if (quotes.isNotEmpty()) {
                 respondMenu {
