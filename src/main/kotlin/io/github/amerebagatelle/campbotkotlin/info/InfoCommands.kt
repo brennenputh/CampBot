@@ -1,5 +1,6 @@
 package io.github.amerebagatelle.campbotkotlin.info
 
+import io.github.amerebagatelle.campbotkotlin.Permissions
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
 import me.jakejmattson.discordkt.arguments.UserArg
@@ -36,6 +37,23 @@ fun infoCommands() = commands("info") {
             respond {
                 title = "Info updated"
                 description = "Your ${args.first} has been updated."
+            }
+        }
+    }
+    command("executiveUpdateInfo") {
+        requiredPermission = Permissions.BOT_OWNER
+        execute(AnyArg("infoValue"), UserArg("user"), QuoteArg("setpoint")) {
+            val info = getInfo(args.second.id)
+            info.id = args.second.id.toString()
+            info.username = args.second.username
+            when (args.first) {
+                "realName" -> info.realName = args.third
+                "location" -> info.location = args.third
+            }
+            updateInfo(args.second.id, info)
+            respond {
+                title = "Info updated"
+                description = "${args.second.username}'s ${args.first} has been updated."
             }
         }
     }
