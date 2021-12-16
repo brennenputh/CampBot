@@ -49,7 +49,7 @@ fun main() {
         onStart {
             createQuoteMessageCommands(kord, kord.guilds.first())
         }
-        handleExceptions {
+        onException {
             exception.printStackTrace()
         }
     }
@@ -60,7 +60,7 @@ fun logPrecondition() = precondition {
     val file = File("log/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}.txt")
     @Suppress("BlockingMethodInNonBlockingContext")
     file.createNewFile()
-    file.appendText("Command: ${command?.name} User: ${author.username} (${author.id.asString})  Channel: ${channel.data.name.value ?: "DM"} (${channel.id.asString})  Timestamp: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))}\n")
+    file.appendText("Command: ${command?.name} User: ${author.username} (${author.id})  Channel: ${channel.data.name.value ?: "DM"} (${channel.id})  Timestamp: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))}\n")
 }
 
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
