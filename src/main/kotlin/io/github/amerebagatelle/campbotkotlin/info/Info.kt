@@ -16,13 +16,13 @@ val klaxon = Klaxon()
 
 fun getInfo(userId: Snowflake): UserInfo {
     val infoList = klaxon.parseArray<UserInfo>(FileReader("userInfo.json"))
-    return infoList?.firstOrNull { it.id == userId.asString } ?: UserInfo(userId.asString, "", "", "")
+    return infoList?.firstOrNull { it.id == userId.toString() } ?: UserInfo(userId.toString(), "", "", "")
 }
 
 fun updateInfo(userId: Snowflake, info: UserInfo) {
     val infoList = klaxon.parseArray<UserInfo>(FileReader("userInfo.json"))!!.toMutableList()
 
-    val entry = infoList.firstOrNull { it.id == userId.asString }?.let {
+    val entry = infoList.firstOrNull { it.id == userId.toString() }?.let {
         it.username = info.username
         it.id = info.id
         it.location = info.location
