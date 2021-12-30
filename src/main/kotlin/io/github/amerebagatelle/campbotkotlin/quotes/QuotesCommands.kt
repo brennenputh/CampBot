@@ -22,10 +22,10 @@ fun quotesCommands() = commands("Quotes") {
         execute(QuoteArg("quote"), QuoteArg("author")) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
-            val quoteNumber = Quotes.createQuote(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator)
+            val quoteNumber = createQuote(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator)
             respond {
                 title = "Created quote #$quoteNumber"
-                description = String.format("%s - %s", args.first, args.second)
+                description = "${args.first} - ${args.second}"
                 color = Color(0, 255, 0)
             }
 
@@ -43,23 +43,7 @@ fun quotesCommands() = commands("Quotes") {
     globalCommand("quote") {
         description = "Get a quote.  Quotes are found by number.  Example: &quote 1"
         execute(IntegerArg("quoteNumber")) {
-            val quote = Quotes.findQuote(args.first)
-            if (quote != null) {
-                respond {
-                    title = "Quote #" + quote.number
-                    description = String.format("%s - %s", quote.content, quote.author)
-                    footer {
-                        text = String.format("Quoted by: " + quote.quotedBy)
-                    }
-                    color = Color(0, 255, 0)
-                }
-            } else {
-                respond {
-                    title = "Error"
-                    description = "Could not find quote, does it exist?"
-                    color = Color(255, 0, 0)
-                }
-            }
+            respond(getQuoteMessageForNumber(args.first))
         }
     }
     globalCommand("randomquote", "rq") {
@@ -73,15 +57,7 @@ fun quotesCommands() = commands("Quotes") {
                 return@execute
             }
             repeat(args.first) {
-                val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
-                respond {
-                    title = "Quote #" + quote.number
-                    description = String.format("%s - %s", quote.content, quote.author)
-                    footer {
-                        text = String.format("Quoted by: " + quote.quotedBy)
-                    }
-                    color = Color(0, 255, 0)
-                }
+                respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
                 delay(3000)
             }
         }
@@ -90,7 +66,7 @@ fun quotesCommands() = commands("Quotes") {
         description =
             "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
         execute(QuoteArg("phrase"), BooleanArg("searchByAuthor").optional(false)) {
-            val quotes = Quotes.search(args.first, args.second)
+            val quotes = search(args.first, args.second)
             if (quotes.isNotEmpty()) {
                 respondMenu {
                     for (i in quotes.indices step 20) {
@@ -137,10 +113,10 @@ fun quoteSlashCommands() = commands("Quotes") {
         description =
             "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
-            val quoteNumber = Quotes.createQuote(args.second, args.first, author.username + "#" + author.discriminator)
+            val quoteNumber = createQuote(args.second, args.first, author.username + "#" + author.discriminator)
             respond {
                 title = "Created quote #$quoteNumber"
-                description = String.format("%s - %s", args.first, args.second)
+                description = "${args.first} - ${args.second}"
                 color = Color(0, 255, 0)
             }
 
@@ -158,37 +134,14 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("squote") {
         description = "Get a quote."
         execute(IntegerArg(name = "quoteNumber")) {
-            val quote = Quotes.findQuote(args.first)
-            if (quote != null) {
-                respond {
-                    title = "Quote #" + quote.number
-                    description = String.format("%s - %s", quote.content, quote.author)
-                    footer {
-                        text = String.format("Quoted by: " + quote.quotedBy)
-                    }
-                    color = Color(0, 255, 0)
-                }
-            } else {
-                respond {
-                    title = "Error"
-                    description = "Could not find quote, does it exist?"
-                    color = Color(255, 0, 0)
-                }
-            }
+            respond(getQuoteMessageForNumber(args.first))
         }
     }
     slash("srandomquote") {
         description = "Get a random quote."
         execute {
-            val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
-            respond {
-                title = "Quote #" + quote.number
-                description = String.format("%s - %s", quote.content, quote.author)
-                footer {
-                    text = String.format("Quoted by: " + quote.quotedBy)
-                }
-                color = Color(0, 255, 0)
-            }
+            val quote = findQuote(Random.Default.nextInt(quoteTotal()) + 1)!!
+            respond(getQuoteMessage(quote))
         }
     }
 }

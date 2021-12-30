@@ -5,12 +5,13 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
-import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import io.github.amerebagatelle.campbotkotlin.quotes.createQuoteMessageCommands
+import io.github.amerebagatelle.campbotkotlin.quotes.getQuoteMessageForNumber
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.DotenvException
 import io.github.cdimascio.dotenv.dotenv
@@ -118,19 +119,8 @@ fun messageListener() = listeners {
         // Check for inlined quotes in the message
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
-            val quote = Quotes.findQuote(Integer.parseInt(inline.groupValues[1]))
-            if (quote != null) {
-                message.channel.createEmbed {
-                    title = "Quote #${quote.number}"
-                    description = "${quote.content} - ${quote.author}"
-                    color = Color(0, 255, 0)
-                }
-            } else {
-                message.channel.createEmbed {
-                    title = "Error"
-                    description = "Could not find quote, does it exist?"
-                    color = Color(255, 0, 0)
-                }
+            message.channel.createMessage {
+                getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1]))
             }
         }
     }
