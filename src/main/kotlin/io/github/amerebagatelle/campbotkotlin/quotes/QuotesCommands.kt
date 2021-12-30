@@ -17,8 +17,7 @@ import kotlin.random.Random
 @Suppress("unused")
 fun quotesCommands() = commands("Quotes") {
     globalCommand("createquote", "cq", "cp") {
-        description =
-            "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
+        description = "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
         execute(QuoteArg("quote"), QuoteArg("author")) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
@@ -63,8 +62,7 @@ fun quotesCommands() = commands("Quotes") {
         }
     }
     globalCommand("search") {
-        description =
-            "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
+        description = "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
         execute(QuoteArg("phrase"), BooleanArg("searchByAuthor").optional(false)) {
             val quotes = search(args.first, args.second)
             if (quotes.isNotEmpty()) {
@@ -110,8 +108,7 @@ fun quotesCommands() = commands("Quotes") {
 @Suppress("unused")
 fun quoteSlashCommands() = commands("Quotes") {
     slash("screatequote") {
-        description =
-            "Create a quote."
+        description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
             val quoteNumber = createQuote(args.second, args.first, author.username + "#" + author.discriminator)
             respond {
@@ -140,8 +137,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("srandomquote") {
         description = "Get a random quote."
         execute {
-            val quote = findQuote(Random.Default.nextInt(quoteTotal()) + 1)!!
-            respond(getQuoteMessage(quote))
+            respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
         }
     }
 }

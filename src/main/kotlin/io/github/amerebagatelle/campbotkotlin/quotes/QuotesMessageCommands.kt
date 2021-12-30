@@ -3,6 +3,7 @@ package io.github.amerebagatelle.campbotkotlin.quotes
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.followUp
+import dev.kord.core.behavior.interaction.followUpEphemeral
 import dev.kord.core.entity.Guild
 import dev.kord.core.event.interaction.MessageCommandInteractionCreateEvent
 import dev.kord.rest.builder.message.create.embed
@@ -18,18 +19,17 @@ suspend fun createQuoteMessageCommands(kord: Kord, guild: Guild) {
 @Suppress("unused")
 fun quoteMessageCommands() = listeners {
     on<MessageCommandInteractionCreateEvent> {
-        val response = interaction.acknowledgePublic()
         if (interaction.invokedCommandId == createQuoteId) {
             for (message in interaction.messages.values) {
                 val authorName = getInfo(message.author!!.id).realName
                 if (authorName.isEmpty()) {
-                    response.followUp {
+                    interaction.acknowledgeEphemeral().followUpEphemeral {
                         content = "User must set real name in the info command before you can create a quote."
                     }
                     return@on
                 }
-                val quoteNumber = Quotes.createQuote(authorName, message.content, quotedBy = interaction.user.asUser().asMember(interaction.data.guildId.value!!).username)
-                response.followUp {
+                val quoteNumber = createQuote(authorName, message.content, quotedBy = interaction.user.asUser().asMember(interaction.data.guildId.value!!).username)
+                interaction.acknowledgePublic().followUp {
                     embed {
                         title = "Quote #$quoteNumber"
                         description = "$authorName - ${message.content}"
