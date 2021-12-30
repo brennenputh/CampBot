@@ -1,13 +1,11 @@
-package io.github.amerebagatelle.campbotkotlin.utility
+package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
-import io.github.amerebagatelle.campbotkotlin.pictures.Pictures
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.commands.commands
-import java.io.File
 
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
@@ -20,17 +18,27 @@ fun pictureCommands() = commands("Pictures") {
                     description = "Please attach a file with your message."
                     color = Color(255, 0, 0)
                 }
-            } else {
-                val success = Pictures.upload(args.first, message!!.attachments)
+                return@execute
+            }
 
-                if (success) {
-                    respond {
-                        title = "Success!  File(s) uploaded."
-                    }
-                } else {
-                    respond {
-                        title = "Failure.  Contact bot owner to fix the bot."
-                    }
+            if(getCategories().contains(args.first)) {
+                respond {
+                    title = "Error"
+                    description = "That category does not exist.  Run &categories to see all categories."
+                    color = Color(255, 0, 0)
+                }
+                return@execute
+            }
+
+            val success = upload(args.first, message!!.attachments)
+
+            if (success) {
+                respond {
+                    title = "Success!  File(s) uploaded."
+                }
+            } else {
+                respond {
+                    title = "Failure.  Contact bot owner to fix the bot."
                 }
             }
         }
@@ -38,7 +46,7 @@ fun pictureCommands() = commands("Pictures") {
     globalCommand("categories") {
         description = "Get the list of available categories of files.  Example: &categories"
         execute {
-            val dirs = File("pictures/").list()!!
+            val dirs = getCategories()
             val stringBuilder = StringBuilder()
             for (dir in dirs) {
                 stringBuilder.append("`").append(dir).append("`\n")
@@ -63,7 +71,7 @@ fun pictureCommands() = commands("Pictures") {
             }
             repeat(args.second) {
                 channel.createMessage {
-                    addFile(Pictures.randomPicture(args.first).toPath())
+                    addFile(randomPicture(args.first).toPath())
                 }
                 delay(3000)
             }
