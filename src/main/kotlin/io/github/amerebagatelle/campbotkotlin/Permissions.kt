@@ -13,8 +13,7 @@ enum class Permissions : PermissionSet {
         override suspend fun hasPermission(context: PermissionContext) = context.getMember()?.isOwner() ?: false
     },
     ADMIN {
-        override suspend fun hasPermission(context: PermissionContext) =
-            context.getMember()?.getPermissions()?.contains(Permission.Administrator) ?: false
+        override suspend fun hasPermission(context: PermissionContext) = context.getMember()?.getPermissions()?.contains(Permission.Administrator) ?: false
     },
     CHAOS {
         override suspend fun hasPermission(context: PermissionContext): Boolean = context.getMember()?.roleIds?.contains(chaosRoleId) ?: false
