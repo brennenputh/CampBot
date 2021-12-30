@@ -5,14 +5,14 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
-import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
-import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.request.KtorRequestException
 import io.github.amerebagatelle.campbotkotlin.quotes.Quotes
 import io.github.amerebagatelle.campbotkotlin.quotes.createQuoteMessageCommands
+import io.github.cdimascio.dotenv.Dotenv
+import io.github.cdimascio.dotenv.DotenvException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -22,7 +22,6 @@ import me.jakejmattson.discordkt.dsl.precondition
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 lateinit var chaosRoleId: Snowflake
 lateinit var chaosChannelId: Snowflake
@@ -30,11 +29,26 @@ lateinit var prayerRequestsChannelId: Snowflake
 
 @KordPreview
 fun main() {
-    val dotenv = dotenv()
-    val token = dotenv["TOKEN"]
-    chaosRoleId = Snowflake(dotenv["CHAOS_ROLE_ID"].toLong())
-    chaosChannelId = Snowflake(dotenv["CHAOS_CHANNEL_ID"].toLong())
-    prayerRequestsChannelId = Snowflake(dotenv["PRAYER_REQUESTS_CHANNEL_ID"].toLong())
+    val dotenv: Dotenv
+    try {
+        dotenv = dotenv()
+    } catch (e: DotenvException) {
+        println("Could not load .env file. Please make sure it exists and is formatted correctly.")
+        return
+    }
+    val token = dotenv["TOKEN"] ?: throw IllegalStateException("TOKEN not found in .env file")
+    chaosRoleId = dotenv["CHAOS_ROLE_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
+        println("CHAOS_ROLE_ID not found in .env file")
+        Snowflake.min
+    }
+    chaosChannelId = dotenv["CHAOS_CHANNEL_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
+        println("CHAOS_CHANNEL_ID not found in .env file")
+        Snowflake.min
+    }
+    prayerRequestsChannelId = dotenv["PRAYER_REQUESTS_CHANNEL_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
+        println("PRAYER_REQUESTS_CHANNEL_ID not found in .env file")
+        Snowflake.min
+    }
 
     bot(token) {
         prefix { "&" }
@@ -70,8 +84,6 @@ val googleRegex = Regex("[Gg]+[Oo]+[Gg]+[Ll]+[Ee]+")
 
 var lastPunishmentThreadTimestamp: Long = 0
 var lastPrayerRequestTimestamp: Long = 0
-
-var lastQuoteOfDayPosted = 0
 
 @Suppress("unused")
 fun messageListener() = listeners {
@@ -109,8 +121,8 @@ fun messageListener() = listeners {
             val quote = Quotes.findQuote(Integer.parseInt(inline.groupValues[1]))
             if (quote != null) {
                 message.channel.createEmbed {
-                    title = "Quote #" + quote.number
-                    description = String.format("%s - %s", quote.content, quote.author)
+                    title = "Quote #${quote.number}"
+                    description = "${quote.content} - ${quote.author}"
                     color = Color(0, 255, 0)
                 }
             } else {
@@ -163,24 +175,6 @@ fun messageListener() = listeners {
                 title = "THE GOOOOOOOOOGLE"
                 description = "NOT THE GOOGLE"
                 color = Color(255, 0, 0)
-            }
-        }
-    }
-    // Quote of the day system
-    on<MessageCreateEvent> {
-        val now = LocalDateTime.now()
-        if (now.dayOfMonth != lastQuoteOfDayPosted && now.hour >= 6) {
-            lastQuoteOfDayPosted = now.dayOfMonth
-            val quote = Quotes.findQuote(Random.Default.nextInt(Quotes.quoteTotal()) + 1)!!
-            message.getGuild().getChannelOf<TextChannel>(chaosChannelId).createMessage {
-                embed {
-                    title = "Quote of the Day: #" + quote.number
-                    description = String.format("%s - %s", quote.content, quote.author)
-                    footer {
-                        text = String.format("Quoted by: " + quote.quotedBy)
-                    }
-                    color = Color(0, 255, 0)
-                }
             }
         }
     }
