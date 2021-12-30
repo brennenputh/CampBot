@@ -57,6 +57,17 @@ fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): 
     return quoteNumber
 }
 
+fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "Unknown"): suspend (EmbedBuilder) -> Unit {
+    val quoteNumber = createQuote(author, content, quotedBy)
+    return {
+        it.apply {
+            title = "Created quote #$quoteNumber"
+            description = "$author - $content"
+            color = Color(0, 255, 0)
+        }
+    }
+}
+
 fun quoteTotal(): Int {
     var quoteNumber = 0
     JsonReader(FileReader(quoteFile)).use { reader ->
@@ -101,19 +112,23 @@ fun search(searchTerm: String, byAuthor: Boolean): List<Quote> {
     return quotes.sortedBy { it.first }.map { it.second }
 }
 
-fun getQuoteMessage(quote: Quote): EmbedBuilder = EmbedBuilder().apply {
-    title = "Quote # ${quote.number}"
-    description = "${quote.content} - ${quote.author}"
-    footer {
-        text = "Quoted by: ${quote.quotedBy}"
+fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
+    it.apply {
+        title = "Quote #${quote.number}"
+        description = "${quote.content} - ${quote.author}"
+        footer {
+            text = "Quoted by: ${quote.quotedBy}"
+        }
+        color = Color(0, 255, 0)
     }
-    color = Color(0, 255, 0)
 }
 
-fun getQuoteMessageForNumber(number: Int): EmbedBuilder = findQuote(number)?.let { getQuoteMessage(it) } ?: EmbedBuilder().apply {
-    title = "Error"
-    description = "Quote #$number not found"
-    color = Color(255, 0, 0)
+fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: {
+    it.apply {
+        title = "Error"
+        description = "Quote #$number not found"
+        color = Color(255, 0, 0)
+    }
 }
 
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")

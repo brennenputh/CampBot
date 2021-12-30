@@ -5,7 +5,6 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
-import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
@@ -119,9 +118,7 @@ fun messageListener() = listeners {
         // Check for inlined quotes in the message
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
-            message.channel.createMessage {
-                getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1]))
-            }
+            message.channel.createEmbed { getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1])).invoke(this) }
         }
     }
     // Auto-create threads in prayer requests

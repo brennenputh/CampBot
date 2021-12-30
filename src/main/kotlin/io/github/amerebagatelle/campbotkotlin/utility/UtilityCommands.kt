@@ -22,6 +22,10 @@ fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
             exitProcess(0)
         }
     }
+}
+
+@Suppress("unused")
+fun userUtilityCommands() = commands("Utility") {
     globalCommand("quotesfile") {
         description = "Get the quotes file from the bot."
         execute {

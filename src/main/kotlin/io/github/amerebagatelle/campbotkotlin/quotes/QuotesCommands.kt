@@ -1,8 +1,6 @@
 package io.github.amerebagatelle.campbotkotlin.quotes
 
 import dev.kord.common.Color
-import dev.kord.core.behavior.channel.createMessage
-import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
 import kotlinx.coroutines.delay
@@ -10,7 +8,6 @@ import me.jakejmattson.discordkt.arguments.BooleanArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
 import me.jakejmattson.discordkt.commands.commands
-import kotlin.io.path.Path
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -21,22 +18,7 @@ fun quotesCommands() = commands("Quotes") {
         execute(QuoteArg("quote"), QuoteArg("author")) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
-            val quoteNumber = createQuote(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator)
-            respond {
-                title = "Created quote #$quoteNumber"
-                description = "${args.first} - ${args.second}"
-                color = Color(0, 255, 0)
-            }
-
-            // On a multiple of 100 quotes, post the quote file
-            if (quoteNumber % 100 == 0) {
-                channel.createMessage {
-                    embed {
-                        title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
-                    }
-                    addFile(Path("./quotes.json"))
-                }
-            }
+            respond(createQuoteWithMessage(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator))
         }
     }
     globalCommand("quote") {
@@ -56,7 +38,7 @@ fun quotesCommands() = commands("Quotes") {
                 return@execute
             }
             repeat(args.first) {
-                respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
+                respond (getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
                 delay(3000)
             }
         }
@@ -110,22 +92,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("screatequote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
-            val quoteNumber = createQuote(args.second, args.first, author.username + "#" + author.discriminator)
-            respond {
-                title = "Created quote #$quoteNumber"
-                description = "${args.first} - ${args.second}"
-                color = Color(0, 255, 0)
-            }
-
-            // On a multiple of 100 quotes, post the quote file
-            if (quoteNumber % 100 == 0) {
-                channel.createMessage {
-                    embed {
-                        title = "You have earned the quotes file, being that you are now at $quoteNumber quotes."
-                    }
-                    addFile(Path("./quotes.json"))
-                }
-            }
+            respond(createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator))
         }
     }
     slash("squote") {
