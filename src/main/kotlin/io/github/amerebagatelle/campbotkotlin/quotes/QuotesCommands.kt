@@ -3,9 +3,11 @@ package io.github.amerebagatelle.campbotkotlin.quotes
 import dev.kord.common.Color
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
+import io.github.amerebagatelle.campbotkotlin.info.getInfo
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.BooleanArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
+import me.jakejmattson.discordkt.arguments.MessageArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
 import me.jakejmattson.discordkt.commands.commands
 import kotlin.math.floor
@@ -89,22 +91,47 @@ fun quotesCommands() = commands("Quotes") {
 
 @Suppress("unused")
 fun quoteSlashCommands() = commands("Quotes") {
-    slash("screatequote") {
+    slash("createquote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
             respond(createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator))
         }
     }
-    slash("squote") {
+    slash("quote") {
         description = "Get a quote."
         execute(IntegerArg(name = "quoteNumber")) {
             respond(getQuoteMessageForNumber(args.first))
         }
     }
-    slash("srandomquote") {
+    slash("randomquote") {
         description = "Get a random quote."
         execute {
             respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
+        }
+    }
+}
+
+@Suppress("unused")
+fun quoteMessageCommands() = commands("Quotes") {
+    slash("Create_Quote") {
+        execute(MessageArg) {
+            val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
+                respond {
+                    title = "Error"
+                    description = "Could not find author."
+                    color = Color(255, 0, 0)
+                }
+                return@execute
+            }
+            if (authorName.isEmpty()) {
+                respond {
+                    title = "Error"
+                    description = "User must set real name in the info command before you can create a quote."
+                    color = Color(255, 0, 0)
+                }
+                return@execute
+            }
+            respond(createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator))
         }
     }
 }

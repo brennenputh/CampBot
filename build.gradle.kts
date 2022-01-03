@@ -9,9 +9,8 @@ group = "io.github.amerebagatelle"
 version = "1.1.1"
 
 repositories {
-    mavenLocal()
-    mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    mavenCentral()
 }
 
 dependencies {

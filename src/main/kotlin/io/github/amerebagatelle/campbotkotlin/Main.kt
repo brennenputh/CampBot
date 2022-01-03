@@ -9,13 +9,11 @@ import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
-import io.github.amerebagatelle.campbotkotlin.quotes.createQuoteMessageCommands
 import io.github.amerebagatelle.campbotkotlin.quotes.getQuoteMessageForNumber
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.DotenvException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import me.jakejmattson.discordkt.dsl.bot
 import me.jakejmattson.discordkt.dsl.listeners
 import me.jakejmattson.discordkt.dsl.precondition
@@ -59,9 +57,6 @@ fun main() {
         }
         presence {
             watching("for your command")
-        }
-        onStart {
-            createQuoteMessageCommands(kord, kord.guilds.first())
         }
         onException {
             exception.printStackTrace()
