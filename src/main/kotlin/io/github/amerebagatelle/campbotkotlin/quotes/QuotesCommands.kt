@@ -94,26 +94,10 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
-            respond(createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator))
+            respond(createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator), false)
         }
     }
-    slash("quote") {
-        description = "Get a quote."
-        execute(IntegerArg(name = "quoteNumber")) {
-            respond(getQuoteMessageForNumber(args.first))
-        }
-    }
-    slash("randomquote") {
-        description = "Get a random quote."
-        execute {
-            respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
-        }
-    }
-}
-
-@Suppress("unused")
-fun quoteMessageCommands() = commands("Quotes") {
-    slash("Create_Quote") {
+    slash("createquotemessage", "Create Quote") {
         execute(MessageArg) {
             val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
                 respond {
@@ -131,7 +115,19 @@ fun quoteMessageCommands() = commands("Quotes") {
                 }
                 return@execute
             }
-            respond(createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator))
+            respond(createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator), false)
+        }
+    }
+    slash("quote") {
+        description = "Get a quote."
+        execute(IntegerArg(name = "quoteNumber")) {
+            respond(getQuoteMessageForNumber(args.first))
+        }
+    }
+    slash("randomquote") {
+        description = "Get a random quote."
+        execute {
+            respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
         }
     }
 }
