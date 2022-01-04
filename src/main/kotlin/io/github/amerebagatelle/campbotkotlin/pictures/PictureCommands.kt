@@ -66,3 +66,22 @@ fun pictureCommands() = commands("Pictures") {
         }
     }
 }
+
+@Suppress("unused")
+fun pictureSlashCommands() = commands("Pictures") {
+    globalSlash("categories") {
+        description = "Get the list of available categories of files.  Example: &categories"
+        execute {
+            val dirs = getCategories()
+            val stringBuilder = StringBuilder()
+            for (dir in dirs) {
+                stringBuilder.append("`").append(dir).append("`\n")
+            }
+            respond {
+                title = "Categories"
+                description = stringBuilder.toString()
+                color = EMBED_GREEN
+            }
+        }
+    }
+}

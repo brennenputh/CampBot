@@ -89,13 +89,14 @@ fun quotesCommands() = commands("Quotes") {
 
 @Suppress("unused")
 fun quoteSlashCommands() = commands("Quotes") {
-    slash("createquote") {
+    globalSlash("createquote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
             respond(embedBuilder = createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"), ephemeral = false)
         }
     }
-    slash("createquotemessage", "Create Quote") {
+    globalSlash("createquotemessage", "Create Quote") {
+        description = "Create a quote with a message."
         execute(MessageArg) {
             val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
                 respond(getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
@@ -108,13 +109,13 @@ fun quoteSlashCommands() = commands("Quotes") {
             respond(embedBuilder = createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"), ephemeral = false)
         }
     }
-    slash("quote") {
+    globalSlash("quote") {
         description = "Get a quote."
         execute(IntegerArg(name = "quoteNumber")) {
             respond(getQuoteMessageForNumber(args.first))
         }
     }
-    slash("randomquote") {
+    globalSlash("randomquote") {
         description = "Get a random quote."
         execute {
             respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
