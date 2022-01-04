@@ -94,7 +94,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
-            respond(createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator), false)
+            respond(embedBuilder = createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator), ephemeral = false)
         }
     }
     slash("createquotemessage", "Create Quote") {
@@ -115,7 +115,7 @@ fun quoteSlashCommands() = commands("Quotes") {
                 }
                 return@execute
             }
-            respond(createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator), false)
+            respond(embedBuilder = createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator), ephemeral = false)
         }
     }
     slash("quote") {
