@@ -1,11 +1,12 @@
 package io.github.amerebagatelle.campbotkotlin.quotes
 
-import dev.kord.common.Color
 import dev.kord.x.emoji.Emojis
 import dev.kord.x.emoji.toReaction
+import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
+import io.github.amerebagatelle.campbotkotlin.EMBED_RED
+import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import io.github.amerebagatelle.campbotkotlin.info.getInfo
 import kotlinx.coroutines.delay
-import me.jakejmattson.discordkt.arguments.BooleanArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.arguments.MessageArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
@@ -17,10 +18,10 @@ import kotlin.random.Random
 fun quotesCommands() = commands("Quotes") {
     globalCommand("createquote", "cq", "cp") {
         description = "Create a quote.  Takes two quote arguments, Content and Author.  Example: &createquote \"content\" \"author\""
-        execute(QuoteArg("quote"), QuoteArg("author")) {
+        execute(QuoteArg("content"), QuoteArg("author")) {
             message!!.addReaction(Emojis.eyes.toReaction())
 
-            respond(createQuoteWithMessage(args.second, args.first, message?.author?.username + "#" + message?.author?.discriminator))
+            respond(createQuoteWithMessage(args.second, args.first, "${message?.author?.username}#${message?.author?.discriminator}"))
         }
     }
     globalCommand("quote") {
@@ -33,10 +34,7 @@ fun quotesCommands() = commands("Quotes") {
         description = "Get a random quote.  Example: &randomquote"
         execute(IntegerArg.optional(1)) {
             if (args.first > 40) {
-                respond {
-                    title = "Number too large."
-                    description = "Please make number under 40"
-                }
+                respond(getErrorEmbed("Too many quotes requested.  Max is 40."))
                 return@execute
             }
             repeat(args.first) {
@@ -47,8 +45,8 @@ fun quotesCommands() = commands("Quotes") {
     }
     globalCommand("search") {
         description = "Search for a phrase in the quotes file.  Optional second argument to search by author name.  Example: &search \"foo\" false"
-        execute(QuoteArg("phrase"), BooleanArg("searchByAuthor").optional(false)) {
-            val quotes = search(args.first, args.second)
+        execute(QuoteArg("phrase")) {
+            val quotes = search(args.first)
             if (quotes.isNotEmpty()) {
                 respondMenu {
                     for (i in quotes.indices step 20) {
@@ -62,7 +60,7 @@ fun quotesCommands() = commands("Quotes") {
                         page {
                             title = "Page #${(floor(i.toDouble() / 20) + 1).toInt()}:"
                             description = stringBuilder.toString()
-                            color = Color(0, 255, 0)
+                            color = EMBED_GREEN
                         }
                     }
 
@@ -80,9 +78,9 @@ fun quotesCommands() = commands("Quotes") {
                 }
             } else {
                 respond {
-                    title = "Error"
+                    title = "No results found."
                     description = "Did not find any matches for your query."
-                    color = Color(255, 0, 0)
+                    color = EMBED_RED
                 }
             }
         }
@@ -94,28 +92,20 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
         execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
-            respond(embedBuilder = createQuoteWithMessage(args.second, args.first, author.username + "#" + author.discriminator), ephemeral = false)
+            respond(embedBuilder = createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"), ephemeral = false)
         }
     }
     slash("createquotemessage", "Create Quote") {
         execute(MessageArg) {
             val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
-                respond {
-                    title = "Error"
-                    description = "Could not find author."
-                    color = Color(255, 0, 0)
-                }
+                respond(getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
                 return@execute
             }
             if (authorName.isEmpty()) {
-                respond {
-                    title = "Error"
-                    description = "User must set real name in the info command before you can create a quote."
-                    color = Color(255, 0, 0)
-                }
+                respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
                 return@execute
             }
-            respond(embedBuilder = createQuoteWithMessage(args.first.content, authorName, author.username + "#" + author.discriminator), ephemeral = false)
+            respond(embedBuilder = createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"), ephemeral = false)
         }
     }
     slash("quote") {

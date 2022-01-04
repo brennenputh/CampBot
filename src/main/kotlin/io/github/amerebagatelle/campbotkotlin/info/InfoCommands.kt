@@ -1,5 +1,6 @@
 package io.github.amerebagatelle.campbotkotlin.info
 
+import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.QuoteArg
@@ -35,8 +36,9 @@ fun infoCommands() = commands("info") {
             }
             updateInfo(author.id, info)
             respond {
-                title = "Info updated"
+                title = "Info updated."
                 description = "Your ${args.first} has been updated."
+                color = EMBED_GREEN
             }
         }
     }
@@ -52,8 +54,9 @@ fun infoCommands() = commands("info") {
             }
             updateInfo(args.second.id, info)
             respond {
-                title = "Info updated"
+                title = "Info updated."
                 description = "${args.second.username}'s ${args.first} has been updated."
+                color = EMBED_GREEN
             }
         }
     }

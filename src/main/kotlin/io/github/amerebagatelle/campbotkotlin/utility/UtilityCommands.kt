@@ -1,8 +1,8 @@
 package io.github.amerebagatelle.campbotkotlin.utility
 
-import dev.kord.common.Color
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
+import io.github.amerebagatelle.campbotkotlin.EMBED_RED
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.commands.commands
@@ -16,7 +16,7 @@ fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
         execute {
             respond {
                 title = "Shutting down in five seconds..."
-                color = Color(255, 0, 0)
+                color = EMBED_RED
             }
             delay(5000)
             exitProcess(0)

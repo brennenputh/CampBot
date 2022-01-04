@@ -1,6 +1,5 @@
 package io.github.amerebagatelle.campbotkotlin
 
-import dev.kord.common.Color
 import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
@@ -136,7 +135,7 @@ fun messageListener() = listeners {
             message.channel.createEmbed {
                 title = "RULES"
                 description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
-                color = Color(255, 0, 0)
+                color = EMBED_RED
             }
 
             val chaosRole = getGuild()?.getRole(chaosRoleId)
@@ -156,7 +155,7 @@ fun messageListener() = listeners {
             message.channel.createEmbed {
                 title = "THE GOOOOOOOOOGLE"
                 description = "NOT THE GOOGLE"
-                color = Color(255, 0, 0)
+                color = EMBED_RED
             }
         }
     }

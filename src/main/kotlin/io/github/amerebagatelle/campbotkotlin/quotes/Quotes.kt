@@ -3,8 +3,9 @@ package io.github.amerebagatelle.campbotkotlin.quotes
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
-import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
+import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
+import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -63,7 +64,7 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "
         it.apply {
             title = "Created quote #$quoteNumber"
             description = "$author - $content"
-            color = Color(0, 255, 0)
+            color = EMBED_GREEN
         }
     }
 }
@@ -86,7 +87,7 @@ fun quoteTotal(): Int {
     return quoteNumber
 }
 
-fun search(searchTerm: String, byAuthor: Boolean): List<Quote> {
+fun search(searchTerm: String): List<Quote> {
     val quotes = mutableListOf<Pair<Int, Quote>>()
     JsonReader(FileReader(quoteFile)).use { reader ->
         reader.beginObject {
@@ -102,7 +103,7 @@ fun search(searchTerm: String, byAuthor: Boolean): List<Quote> {
                         }
                     }
                     val relevance = FuzzySearch.tokenSetRatio(content, searchTerm)
-                    if (if (!byAuthor) relevance > 50 else author.contains(searchTerm, true)) quotes.add(
+                    if (relevance > 50 || author.contains(searchTerm, true)) quotes.add(
                         Pair(relevance, Quote(number, author, content))
                     )
                 }
@@ -119,16 +120,10 @@ fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
         footer {
             text = "Quoted by: ${quote.quotedBy}"
         }
-        color = Color(0, 255, 0)
+        color = EMBED_GREEN
     }
 }
 
-fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: {
-    it.apply {
-        title = "Error"
-        description = "Quote #$number not found"
-        color = Color(255, 0, 0)
-    }
-}
+fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
 
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")
