@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    application
     kotlin("jvm") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version ("6.0.0")
+    java
+    id("com.github.johnrengelman.shadow") version ("7.0.0")
 }
 
 group = "io.github.amerebagatelle"
@@ -27,8 +29,6 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "16"
 }
 
-val shadowJar by tasks.getting(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class) {
-    manifest {
-        attributes["Main-Class"] = "io.github.amerebagatelle.campbotkotlin.MainKt"
-    }
+application {
+    mainClass.set("io.github.amerebagatelle.campbotkotlin.MainKt")
 }
