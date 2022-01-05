@@ -28,7 +28,7 @@ jobs:
       - name: Push Image
         run: |
           docker buildx build \
-                  --tag  ghcr.io/campbot/t/bot:"$GITHUB_SHA" \
-                  --tag  ghcr.io/campbot/t/bot:latest \
+                  --tag  ghcr.io/amerebagatelle/t/bot:"$GITHUB_SHA" \
+                  --tag  ghcr.io/amerebagatelle/t/bot:latest \
                   --file ./Dockerfile \
                   --output type=image,push=true .
