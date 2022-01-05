@@ -24,11 +24,11 @@ jobs:
       - name: Login
         env:
           GITHUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run: docker login ghcr.io --username qt-haskell --password "$GITHUB_TOKEN"
+        run: docker login ghcr.io --username AMereBagatelle --password "$GITHUB_TOKEN"
       - name: Push Image
         run: |
           docker buildx build \
-                  --tag  ghcr.io/qt-haskell/t/bot:"$GITHUB_SHA" \
-                  --tag  ghcr.io/qt-haskell/t/bot:latest \
+                  --tag  ghcr.io/AMereBagatelle/t/bot:"$GITHUB_SHA" \
+                  --tag  ghcr.io/AMereBagatelle/t/bot:latest \
                   --file ./Dockerfile \
                   --output type=image,push=true .
