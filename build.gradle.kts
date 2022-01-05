@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.amerebagatelle"
-version = "1.1.1"
+version = "1.1.2"
 
 repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
