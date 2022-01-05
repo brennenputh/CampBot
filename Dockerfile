@@ -5,4 +5,5 @@ COPY build/install/campbot/ .
 
 LABEL org.opencontainers.image.source = "https://github.com/AMereBagatelle/CampBot"
 
+CMD ["-Duser.dir=/home/campbot/"]
 ENTRYPOINT ["bin/campbot"]
