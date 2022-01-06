@@ -98,10 +98,7 @@ fun messageListener() = listeners {
                     description = grabbedMessage?.content
                 }
             } catch (e: KtorRequestException) {
-                val error = message.channel.createEmbed {
-                    title = "Error"
-                    description = "Link not from this server."
-                }
+                val error = message.channel.createEmbed { getErrorEmbed("Could not get message from link.").invoke(this) }
                 delay(5000)
                 error.delete()
             }
