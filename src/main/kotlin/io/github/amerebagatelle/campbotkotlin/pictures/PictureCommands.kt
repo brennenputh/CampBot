@@ -23,16 +23,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            val success = upload(args.first, message!!.attachments)
-
-            if (success) {
-                respond {
-                    title = "Success!  File(s) uploaded."
-                    color = EMBED_GREEN
-                }
-            } else {
-                respond(getErrorEmbed("An error occurred while uploading file(s).\nContact bot author to fix the bot."))
-            }
+            respond(uploadWithMessage(args.first, message!!.attachments))
         }
     }
     globalCommand("categories") {

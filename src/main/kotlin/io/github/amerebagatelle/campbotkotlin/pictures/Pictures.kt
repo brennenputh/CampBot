@@ -1,6 +1,9 @@
 package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.core.entity.Attachment
+import dev.kord.rest.builder.message.EmbedBuilder
+import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
+import io.github.amerebagatelle.campbotkotlin.EMBED_RED
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -9,7 +12,7 @@ import kotlin.random.nextInt
 
 fun getCategories(): Array<String> = File("pictures/").list()!!
 
-fun upload(category: String, pictures: Set<Attachment>): Boolean {
+fun upload(category: String, pictures: Set<Attachment>) {
     for (picture in pictures) {
         try {
             URL(picture.url).openStream().use { input ->
@@ -18,11 +21,26 @@ fun upload(category: String, pictures: Set<Attachment>): Boolean {
                 }
             }
         } catch (e: Exception) {
-            return false
+            throw FailedToUploadException()
         }
     }
+}
 
-    return true
+class FailedToUploadException : Exception()
+
+fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (EmbedBuilder) -> Unit = {
+    try {
+        upload(category, pictures)
+        it.apply {
+            title = "Success!  File(s) uploaded."
+            color = EMBED_GREEN
+        }
+    } catch (e: FailedToUploadException) {
+        it.apply {
+            title = "AAAAAAAAAAAAAAAAAAAAAA EVERYONE PANIC SOMETHING WENT VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY WRONG"
+            color = EMBED_RED
+        }
+    }
 }
 
 private val recentlyPostedPictures = mutableListOf<Int>()
