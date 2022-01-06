@@ -129,6 +129,7 @@ fun messageListener() = listeners {
     }
     // Chaos rules implementation
     on<MessageCreateEvent> {
+        if (message.author!!.isBot) return@on
         if (message.channelId != chaosChannelId) return@on
 
         if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
@@ -155,6 +156,16 @@ fun messageListener() = listeners {
             message.channel.createEmbed {
                 title = "THE GOOOOOOOOOGLE"
                 description = "NOT THE GOOGLE"
+                color = EMBED_RED
+            }
+        }
+
+        val words = message.content.filter { it.isLetter() || it.isWhitespace() }.split(" ")
+        val uppercasePercentage = words.count { word -> word.count { it.isUpperCase() } == word.length}.toDouble() / words.size
+        println(uppercasePercentage)
+        if(uppercasePercentage > 0.5) {
+            message.channel.createEmbed {
+                title = "inside voice"
                 color = EMBED_RED
             }
         }
