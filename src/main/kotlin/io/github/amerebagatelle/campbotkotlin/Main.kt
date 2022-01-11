@@ -130,6 +130,7 @@ fun messageListener() = listeners {
         if (message.channelId != chaosChannelId) return@on
 
         if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
+            println("Rulebreaker detected")
             message.channel.createEmbed {
                 title = "RULES"
                 description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
@@ -150,6 +151,7 @@ fun messageListener() = listeners {
         }
 
         if (message.content.contains(googleRegex)) {
+            println("Google detected")
             message.channel.createEmbed {
                 title = "THE GOOOOOOOOOGLE"
                 description = "NOT THE GOOGLE"
@@ -157,10 +159,13 @@ fun messageListener() = listeners {
             }
         }
 
+        // well it's not gonna have many words if there's no characters
+        if(message.content.length < 20) return@on
+
         val words = message.content.filter { it.isLetter() || it.isWhitespace() }.split(" ")
         val uppercasePercentage = words.count { word -> word.count { it.isUpperCase() } == word.length}.toDouble() / words.size
-        println(uppercasePercentage)
         if(uppercasePercentage > 0.5) {
+            println("Shouting detected")
             message.channel.createEmbed {
                 title = "inside voice"
                 color = EMBED_RED
