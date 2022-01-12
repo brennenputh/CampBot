@@ -16,13 +16,16 @@ import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.dsl.bot
 import me.jakejmattson.discordkt.dsl.listeners
 import me.jakejmattson.discordkt.dsl.precondition
-import java.io.File
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 lateinit var chaosRoleId: Snowflake
 lateinit var chaosChannelId: Snowflake
 lateinit var prayerRequestsChannelId: Snowflake
+
+val logger: Logger = LoggerFactory.getLogger("campbot")
 
 @KordPreview
 fun main() {
@@ -57,18 +60,18 @@ fun main() {
         presence {
             watching("for your command")
         }
+        onStart {
+            logger.info("Bot started.")
+        }
         onException {
-            exception.printStackTrace()
+            logger.error("Exception caught", this)
         }
     }
 }
 
 @Suppress("unused")
 fun logPrecondition() = precondition {
-    val file = File("log/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}.txt")
-    @Suppress("BlockingMethodInNonBlockingContext")
-    file.createNewFile()
-    file.appendText("Command: ${command?.name} User: ${author.username} (${author.id})  Channel: ${channel.data.name.value ?: "DM"} (${channel.id})  Timestamp: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))}\n")
+    logger.info("Command: ${command?.name} User: ${author.username} (${author.id})  Channel: ${channel.data.name.value ?: "DM"} (${channel.id})  Timestamp: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))}")
 }
 
 val urlRegex = Regex("https?://(?:canary\\.)?discord\\.com/channels/(\\d+)/(\\d+)/(\\d+)$")
