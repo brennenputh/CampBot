@@ -3,6 +3,7 @@ package io.github.amerebagatelle.campbotkotlin.info
 import com.beust.klaxon.Klaxon
 import dev.kord.common.entity.Snowflake
 import io.github.amerebagatelle.campbotkotlin.getDataDirectory
+import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
@@ -14,7 +15,7 @@ data class UserInfo(
 )
 
 val klaxon = Klaxon()
-val infoFile = getDataDirectory().resolve("userInfo.json").toFile()
+val infoFile: File = getDataDirectory().resolve("userInfo.json").toFile()
 
 fun getInfo(userId: Snowflake): UserInfo {
     val infoList = klaxon.parseArray<UserInfo>(FileReader(infoFile))
