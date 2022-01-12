@@ -1,9 +1,9 @@
-FROM ibm-semeru-runtimes:open-17-jre-focal
+FROM openjdk:16-jdk-slim
 
-WORKDIR /usr/app
-COPY build/install/campbot/ .
+COPY build/libs/CampBot-*-all.jar /usr/local/lib/campbot.jar
 
-LABEL org.opencontainers.image.source = "https://github.com/AMereBagatelle/CampBot"
+RUN mkdir /bot
+RUN mkdir /data
+WORKDIR /bot
 
-CMD ["-Duser.dir=/home/campbot/"]
-ENTRYPOINT ["bin/campbot"]
+ENTRYPOINT ["java", "-Xms2G", "-Xmx2G", "-jar", "/usr/local/lib/campbot.jar"]

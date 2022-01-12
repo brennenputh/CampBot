@@ -30,8 +30,7 @@ val logger: Logger = LoggerFactory.getLogger("campbot")
 
 @KordPreview
 fun main() {
-    println(File(".").absolutePath)
-    println(File(".").listFiles())
+    println(File("/data").listFiles().joinToString(", ") { it.name })
 
     val dotenv: Dotenv
     try {
