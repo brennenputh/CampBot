@@ -18,6 +18,7 @@ import me.jakejmattson.discordkt.dsl.listeners
 import me.jakejmattson.discordkt.dsl.precondition
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,6 +30,9 @@ val logger: Logger = LoggerFactory.getLogger("campbot")
 
 @KordPreview
 fun main() {
+    println(File(".").absolutePath)
+    println(File(".").listFiles())
+
     val dotenv: Dotenv
     try {
         dotenv = dotenv()
