@@ -5,12 +5,12 @@ import com.beust.klaxon.Klaxon
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import dev.kord.rest.builder.message.EmbedBuilder
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
+import io.github.amerebagatelle.campbotkotlin.getDataDirectory
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
-import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
-private val quoteFile = File("./quotes.json")
+private val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
 
 fun findQuote(number: Int): Quote? {
     var author: String? = null

@@ -4,19 +4,20 @@ import dev.kord.core.entity.Attachment
 import dev.kord.rest.builder.message.EmbedBuilder
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.EMBED_RED
+import io.github.amerebagatelle.campbotkotlin.getDataDirectory
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-fun getCategories(): Array<String> = File("pictures/").list()!!
+fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().list()!!
 
 fun upload(category: String, pictures: Set<Attachment>) {
     for (picture in pictures) {
         try {
             URL(picture.url).openStream().use { input ->
-                FileOutputStream(File("pictures/" + category + "/" + System.currentTimeMillis() + picture.filename)).use { output ->
+                FileOutputStream(getDataDirectory().resolve("pictures").resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}").toFile()).use { output ->
                     input.copyTo(output)
                 }
             }
@@ -46,7 +47,7 @@ fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (Emb
 private val recentlyPostedPictures = mutableListOf<Int>()
 
 fun randomPicture(category: String): File {
-    val files = File("pictures/$category/").listFiles()!!
+    val files = getDataDirectory().resolve("pictures").resolve(category).toFile().listFiles()!!
 
     var selectedFileIndex = Random.Default.nextInt(files.indices)
     while (recentlyPostedPictures.contains(selectedFileIndex)) {

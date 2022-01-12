@@ -19,6 +19,7 @@ import me.jakejmattson.discordkt.dsl.precondition
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -30,11 +31,11 @@ val logger: Logger = LoggerFactory.getLogger("campbot")
 
 @KordPreview
 fun main() {
-    println(File("/data").listFiles().joinToString(", ") { it.name })
-
     val dotenv: Dotenv
     try {
-        dotenv = dotenv()
+        dotenv = dotenv {
+            directory = getDataDirectory().toAbsolutePath().toString()
+        }
     } catch (e: DotenvException) {
         println("Could not load .env file. Please make sure it exists and is formatted correctly.")
         return
@@ -71,6 +72,8 @@ fun main() {
         }
     }
 }
+
+fun getDataDirectory(): Path = if(System.getenv("dev") == "true") File("/data").toPath() else File(".").toPath()
 
 @Suppress("unused")
 fun logPrecondition() = precondition {

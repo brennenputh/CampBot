@@ -4,9 +4,9 @@ import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
 import io.github.amerebagatelle.campbotkotlin.EMBED_RED
 import io.github.amerebagatelle.campbotkotlin.Permissions
+import io.github.amerebagatelle.campbotkotlin.getDataDirectory
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.commands.commands
-import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
 @Suppress("unused")
@@ -33,7 +33,7 @@ fun userUtilityCommands() = commands("Utility") {
                 embed {
                     title = "The quote file for you..."
                 }
-                addFile(Path("./quotes.json"))
+                addFile(getDataDirectory().resolve("quotes.json"))
             }
         }
     }
