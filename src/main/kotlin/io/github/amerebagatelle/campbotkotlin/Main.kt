@@ -38,7 +38,6 @@ fun main() {
         }
     } catch (e: DotenvException) {
         println("Could not load .env file. Please make sure it exists and is formatted correctly.")
-        println(getDataDirectory().toAbsolutePath().toString())
         return
     }
     val token = dotenv["TOKEN"] ?: throw IllegalStateException("TOKEN not found in .env file")
@@ -74,7 +73,7 @@ fun main() {
     }
 }
 
-fun getDataDirectory(): Path = if(System.getenv("dev") == "true") File("/data").toPath() else File(".").toPath()
+fun getDataDirectory(): Path = if(System.getenv("dev") != "true") File("/data").toPath() else File(".").toPath()
 
 @Suppress("unused")
 fun logPrecondition() = precondition {
