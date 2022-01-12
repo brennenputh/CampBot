@@ -1,6 +1,6 @@
 FROM openjdk:16-jdk-slim
 
-COPY build/libs/CampBot-*-all.jar /usr/local/lib/campbot.jar
+COPY build/libs/campbot-*-all.jar /usr/local/lib/campbot.jar
 
 RUN mkdir /bot
 RUN mkdir /data
