@@ -3,7 +3,6 @@ package io.github.amerebagatelle.campbotkotlin
 import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import io.github.cdimascio.dotenv.Dotenv
-import io.github.cdimascio.dotenv.DotenvException
 import io.github.cdimascio.dotenv.dotenv
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
@@ -19,15 +18,11 @@ val logger: Logger = LoggerFactory.getLogger("campbot")
 
 @KordPreview
 fun main() {
-    val dotenv: Dotenv
-    try {
-        dotenv = dotenv {
-            directory = getDataDirectory().toAbsolutePath().toString()
-        }
-    } catch (e: DotenvException) {
-        println("Could not load .env file. Please make sure it exists and is formatted correctly.")
-        return
+    val dotenv: Dotenv = dotenv {
+        directory = getDataDirectory().toAbsolutePath().toString()
+        ignoreIfMissing = true
     }
+
     val token = dotenv["TOKEN"] ?: throw IllegalStateException("TOKEN not found in .env file")
     chaosRoleId = dotenv["CHAOS_ROLE_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
         println("CHAOS_ROLE_ID not found in .env file")
