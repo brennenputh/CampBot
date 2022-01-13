@@ -40,7 +40,12 @@ fun messageListener() = listeners {
                     description = grabbedMessage?.content
                 }
             } catch (e: KtorRequestException) {
-                val error = message.channel.createEmbed { getErrorEmbed("Could not get message from link.").invoke(this) }
+                val error = message.channel.createEmbed { getErrorEmbed(when(e.httpResponse.status.value) {
+                        403 -> "No access to linked message."
+                        404 -> "Linked message not found."
+                        else -> "Could not get message from link."
+                    }).invoke(this)
+                }
                 delay(5000)
                 error.delete()
             }
@@ -72,7 +77,7 @@ fun messageListener() = listeners {
         if (message.channelId != chaosChannelId) return@on
 
         if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
-            println("Rulebreaker detected")
+            logger.info("Rulebreaker detected")
             message.channel.createEmbed {
                 title = "RULES"
                 description = "A MESSAGE IN #chaos MUST NOT HAVE THAT WORD IN IT"
@@ -93,7 +98,7 @@ fun messageListener() = listeners {
         }
 
         if (message.content.contains(googleRegex)) {
-            println("Google detected")
+            logger.info("Google detected")
             message.channel.createEmbed {
                 title = "THE GOOOOOOOOOGLE"
                 description = "NOT THE GOOGLE"
@@ -107,7 +112,7 @@ fun messageListener() = listeners {
         val words = message.content.filter { it.isLetter() || it.isWhitespace() }.split(" ")
         val uppercasePercentage = words.count { word -> word.count { it.isUpperCase() } == word.length}.toDouble() / words.size
         if(uppercasePercentage > 0.5) {
-            println("Shouting detected")
+            logger.info("Shouting detected")
             message.channel.createEmbed {
                 title = "inside voice"
                 color = EMBED_RED

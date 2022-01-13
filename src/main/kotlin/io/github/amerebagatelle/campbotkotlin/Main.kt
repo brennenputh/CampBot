@@ -23,17 +23,18 @@ fun main() {
         ignoreIfMissing = true
     }
 
-    val token = dotenv["TOKEN"] ?: throw IllegalStateException("TOKEN not found in .env file")
+    val token = dotenv["TOKEN"] ?: throw IllegalStateException("TOKEN environment variable not set")
+
     chaosRoleId = dotenv["CHAOS_ROLE_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
-        println("CHAOS_ROLE_ID not found in .env file")
+        logger.error("CHAOS_ROLE_ID environment variable not set")
         Snowflake.min
     }
     chaosChannelId = dotenv["CHAOS_CHANNEL_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
-        println("CHAOS_CHANNEL_ID not found in .env file")
+        logger.error("CHAOS_CHANNEL_ID environment variable not set")
         Snowflake.min
     }
     prayerRequestsChannelId = dotenv["PRAYER_REQUESTS_CHANNEL_ID"]?.toLong()?.let { Snowflake(it) } ?: run {
-        println("PRAYER_REQUESTS_CHANNEL_ID not found in .env file")
+        logger.error("PRAYER_REQUESTS_CHANNEL_ID environment variable not set")
         Snowflake.min
     }
 
