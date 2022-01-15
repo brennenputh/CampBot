@@ -18,7 +18,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            if(getCategories().contains(args.first)) {
+            if(!getCategories().contains(args.first)) {
                 respond(getErrorEmbed("That category does not exist."))
                 return@execute
             }
