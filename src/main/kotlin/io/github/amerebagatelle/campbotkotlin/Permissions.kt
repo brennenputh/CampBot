@@ -1,24 +1,14 @@
 package io.github.amerebagatelle.campbotkotlin
 
-import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Snowflake
-import me.jakejmattson.discordkt.dsl.PermissionContext
 import me.jakejmattson.discordkt.dsl.PermissionSet
+import me.jakejmattson.discordkt.dsl.permission
 
-enum class Permissions : PermissionSet {
-    BOT_OWNER {
-        override suspend fun hasPermission(context: PermissionContext) = context.user.id == Snowflake(643577385970827266)
-    },
-    GUILD_OWNER {
-        override suspend fun hasPermission(context: PermissionContext) = context.getMember()?.isOwner() ?: false
-    },
-    ADMIN {
-        override suspend fun hasPermission(context: PermissionContext) = context.getMember()?.getPermissions()?.contains(Permission.Administrator) ?: false
-    },
-    CHAOS {
-        override suspend fun hasPermission(context: PermissionContext): Boolean = context.getMember()?.roleIds?.contains(chaosRoleId) ?: false
-    },
-    EVERYONE {
-        override suspend fun hasPermission(context: PermissionContext) = true
-    }
+object Permissions : PermissionSet {
+    val BOT_OWNER = permission("Bot Owner") { users(Snowflake(643577385970827266)) }
+    val GUILD_OWNER = permission("Guild Owner") { users(guild!!.ownerId) }
+    val EVERYONE = permission("Everyone") { roles(guild!!.everyoneRole.id) }
+
+    override val commandDefault = EVERYONE
+    override val hierarchy = listOf(EVERYONE, GUILD_OWNER, BOT_OWNER)
 }

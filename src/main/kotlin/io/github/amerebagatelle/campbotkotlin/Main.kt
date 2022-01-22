@@ -43,7 +43,7 @@ fun main() {
         configure {
             commandReaction = null
             theme = java.awt.Color(0, 255, 0)
-            permissions(commandDefault = Permissions.EVERYONE)
+            permissions = Permissions
         }
         presence {
             watching("for your command")
