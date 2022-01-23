@@ -105,18 +105,5 @@ fun messageListener() = listeners {
                 color = EMBED_RED
             }
         }
-
-        // well it's not gonna have many words if there's no characters
-        if(message.content.length < 20) return@on
-
-        val words = message.content.filter { it.isLetter() || it.isWhitespace() }.split(" ")
-        val uppercasePercentage = words.count { word -> word.count { it.isUpperCase() } == word.length}.toDouble() / words.size
-        if(uppercasePercentage > 0.5) {
-            logger.info("Shouting detected")
-            message.channel.createEmbed {
-                title = "inside voice"
-                color = EMBED_RED
-            }
-        }
     }
 }
