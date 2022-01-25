@@ -4,6 +4,8 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -50,6 +52,12 @@ fun main() {
         }
         onStart {
             logger.info("Bot started.")
+
+            kord.guilds.first().commands.collect {
+                if(it.name.startsWith("s")) {
+                    it.delete()
+                }
+            }
         }
         onException {
             logger.error("Exception caught\n ${exception.stackTraceToString()}")
