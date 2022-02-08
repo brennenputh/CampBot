@@ -6,6 +6,7 @@
     <option name="MAIN_CLASS_NAME" value="io.github.amerebagatelle.campbotkotlin.MainKt" />
     <module name="campbot.main" />
     <shortenClasspath name="NONE" />
+    <option name="VM_PARAMETERS" value="-Dorg.slf4j.simpleLogger.log.campbot=info" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
       <option name="Make" enabled="true" />
