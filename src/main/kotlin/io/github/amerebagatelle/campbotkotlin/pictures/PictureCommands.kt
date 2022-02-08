@@ -48,6 +48,10 @@ fun pictureCommands() = commands("Pictures") {
                 respond(getErrorEmbed("Too many files requested.  Limit is 20."))
                 return@execute
             }
+            if(!getCategories().contains(args.first)) {
+                respond(getErrorEmbed("That category does not exist."))
+                return@execute
+            }
             repeat(args.second) {
                 channel.createMessage {
                     addFile(randomPicture(args.first).toPath())

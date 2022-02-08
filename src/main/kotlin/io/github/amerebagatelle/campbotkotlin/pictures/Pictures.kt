@@ -44,10 +44,11 @@ fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (Emb
     }
 }
 
-private val recentlyPostedPictures = mutableListOf<Int>()
+private val recentlyPostedPicturesMap = getCategories().associateWith { mutableListOf<Int>() }
 
 fun randomPicture(category: String): File {
     val files = getDataDirectory().resolve("pictures").resolve(category).toFile().listFiles()!!
+    val recentlyPostedPictures = recentlyPostedPicturesMap[category] ?: mutableListOf(1)
 
     var selectedFileIndex = Random.Default.nextInt(files.indices)
     while (recentlyPostedPictures.contains(selectedFileIndex)) {
@@ -57,6 +58,5 @@ fun randomPicture(category: String): File {
 
     recentlyPostedPictures.add(selectedFileIndex)
     if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
-
     return files[selectedFileIndex]
 }
