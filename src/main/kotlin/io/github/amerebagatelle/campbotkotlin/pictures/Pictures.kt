@@ -13,27 +13,25 @@ import kotlin.random.nextInt
 
 fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().list()!!
 
-fun upload(category: String, pictures: Set<Attachment>) {
-    for (picture in pictures) {
-        try {
-            URL(picture.url).openStream().use { input ->
-                FileOutputStream(getDataDirectory().resolve("pictures").resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}").toFile()).use { output ->
-                    input.copyTo(output)
-                }
+fun upload(category: String, picture: Attachment) {
+    try {
+        URL(picture.url).openStream().use { input ->
+            FileOutputStream(getDataDirectory().resolve("pictures").resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}").toFile()).use { output ->
+                input.copyTo(output)
             }
-        } catch (e: Exception) {
-            throw FailedToUploadException()
         }
+    } catch (e: Exception) {
+        throw FailedToUploadException()
     }
 }
 
 class FailedToUploadException : Exception()
 
-fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (EmbedBuilder) -> Unit = {
+fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuilder) -> Unit = {
     try {
-        upload(category, pictures)
+        upload(category, picture)
         it.apply {
-            title = "Success!  File(s) uploaded."
+            title = "Success!  File uploaded."
             color = EMBED_GREEN
         }
     } catch (e: FailedToUploadException) {

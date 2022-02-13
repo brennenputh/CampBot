@@ -6,6 +6,7 @@ import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.AnyArg
+import me.jakejmattson.discordkt.arguments.AttachmentArg
 import me.jakejmattson.discordkt.arguments.ChoiceArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.commands.commands
@@ -14,18 +15,13 @@ import me.jakejmattson.discordkt.commands.commands
 fun pictureCommands() = commands("Pictures") {
     globalCommand("upload") {
         description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff"
-        execute(AnyArg("category")) {
-            if (message!!.attachments.isEmpty()) {
-                respond(getErrorEmbed("No attachment in message.\nPlease post a attachment with the command."))
-                return@execute
-            }
-
+        execute(AnyArg("category"), AttachmentArg("picture")) {
             if(!getCategories().contains(args.first)) {
                 respond(getErrorEmbed("That category does not exist."))
                 return@execute
             }
 
-            respond(uploadWithMessage(args.first, message!!.attachments))
+            respond(uploadWithMessage(args.first, args.second))
         }
     }
     slash("post") {
