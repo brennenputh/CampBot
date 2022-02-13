@@ -8,8 +8,8 @@ import me.jakejmattson.discordkt.arguments.UserArg
 import me.jakejmattson.discordkt.commands.commands
 
 @Suppress("unused")
-fun infoCommands() = commands("info") {
-    command("getInfo") {
+fun slashInfoCommands() = commands("infoSlash") {
+    slash("getInfo", "Get Info") {
         description = "Get the info on a user, by ID"
         execute(UserArg("user")) {
             val info = getInfo(args.first.id)
@@ -24,7 +24,7 @@ fun infoCommands() = commands("info") {
             }
         }
     }
-    command("updateInfo") {
+    slash("updateInfo") {
         description = "Update the info the bot has on you."
         execute(AnyArg("infoValue"), QuoteArg("setpoint")) {
             val info = getInfo(author.id)
@@ -42,8 +42,9 @@ fun infoCommands() = commands("info") {
             }
         }
     }
-    command("executiveUpdateInfo") {
+    slash("executiveUpdateInfo") {
         requiredPermission = Permissions.BOT_OWNER
+        description = "Bot-owner only.  Allows updating the info of any user."
         execute(AnyArg("infoValue"), UserArg("user"), QuoteArg("setpoint")) {
             val info = getInfo(args.second.id)
             info.id = args.second.id.toString()
@@ -56,43 +57,6 @@ fun infoCommands() = commands("info") {
             respond {
                 title = "Info updated."
                 description = "${args.second.username}'s ${args.first} has been updated."
-                color = EMBED_GREEN
-            }
-        }
-    }
-}
-
-@Suppress("unused")
-fun slashInfoCommands() = commands("info") {
-    globalSlash("getInfo", "Get Info") {
-        description = "Get the info on a user, by ID"
-        execute(UserArg("user")) {
-            val info = getInfo(args.first.id)
-            respond {
-                title = "Info for ${args.first.username}"
-                description = """
-                    ID: ${info.id}
-                    Username: ${info.username}
-                    Real name: ${info.realName}
-                    Location: ${info.location}
-                """.trimIndent()
-            }
-        }
-    }
-    globalSlash("updateInfo") {
-        description = "Update the info the bot has on you."
-        execute(AnyArg("infoValue"), QuoteArg("setpoint")) {
-            val info = getInfo(author.id)
-            info.id = author.id.toString()
-            info.username = author.username
-            when (args.first) {
-                "realName" -> info.realName = args.second
-                "location" -> info.location = args.second
-            }
-            updateInfo(author.id, info)
-            respond {
-                title = "Info updated."
-                description = "Your ${args.first} has been updated."
                 color = EMBED_GREEN
             }
         }

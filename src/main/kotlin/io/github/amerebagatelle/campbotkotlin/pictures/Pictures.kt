@@ -5,9 +5,9 @@ import dev.kord.rest.builder.message.EmbedBuilder
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.EMBED_RED
 import io.github.amerebagatelle.campbotkotlin.getDataDirectory
-import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
+import java.nio.file.Path
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -46,7 +46,7 @@ fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (Emb
 
 private val recentlyPostedPicturesMap = getCategories().associateWith { mutableListOf<Int>() }
 
-fun randomPicture(category: String): File {
+fun randomPicture(category: String): Path {
     val files = getDataDirectory().resolve("pictures").resolve(category).toFile().listFiles()!!
     val recentlyPostedPictures = recentlyPostedPicturesMap[category] ?: mutableListOf(1)
 
@@ -58,5 +58,5 @@ fun randomPicture(category: String): File {
 
     recentlyPostedPictures.add(selectedFileIndex)
     if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
-    return files[selectedFileIndex]
+    return files[selectedFileIndex].toPath()
 }

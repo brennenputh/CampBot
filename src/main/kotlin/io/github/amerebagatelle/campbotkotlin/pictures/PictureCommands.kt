@@ -1,10 +1,12 @@
 package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.core.behavior.channel.createMessage
+import dev.kord.core.behavior.interaction.followUpEphemeral
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.AnyArg
+import me.jakejmattson.discordkt.arguments.ChoiceArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.commands.commands
 
@@ -26,24 +28,9 @@ fun pictureCommands() = commands("Pictures") {
             respond(uploadWithMessage(args.first, message!!.attachments))
         }
     }
-    globalCommand("categories") {
-        description = "Get the list of available categories of files.  Example: &categories"
-        execute {
-            val dirs = getCategories()
-            val stringBuilder = StringBuilder()
-            for (dir in dirs) {
-                stringBuilder.append("`").append(dir).append("`\n")
-            }
-            respond {
-                title = "Categories"
-                description = stringBuilder.toString()
-                color = EMBED_GREEN
-            }
-        }
-    }
-    globalCommand("post") {
+    slash("post") {
         description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1"
-        execute(AnyArg("category"), IntegerArg("number").optional(1)) {
+        execute(ChoiceArg("category", "The possible picture categories.", choices = getCategories()), IntegerArg("number", "The number of pictures the bot should post.").optional(1)) {
             if (args.second > 20) {
                 respond(getErrorEmbed("Too many files requested.  Limit is 20."))
                 return@execute
@@ -53,8 +40,14 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
             repeat(args.second) {
-                channel.createMessage {
-                    addFile(randomPicture(args.first).toPath())
+                if(interaction != null) interaction?.acknowledgeEphemeral()?.let {
+                    it.followUpEphemeral {
+                        addFile(randomPicture(args.first))
+                    }
+                } else {
+                    channel.createMessage {
+                        addFile(randomPicture(args.first))
+                    }
                 }
                 delay(3000)
             }
@@ -64,7 +57,7 @@ fun pictureCommands() = commands("Pictures") {
 
 @Suppress("unused")
 fun pictureSlashCommands() = commands("Pictures") {
-    globalSlash("categories") {
+    slash("categories") {
         description = "Get the list of available categories of files.  Example: &categories"
         execute {
             val dirs = getCategories()
