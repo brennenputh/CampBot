@@ -63,7 +63,7 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "
     return {
         it.apply {
             title = "Created quote #$quoteNumber"
-            description = "$author - $content"
+            description = "$content - $author"
             color = EMBED_GREEN
         }
     }

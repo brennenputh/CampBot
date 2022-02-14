@@ -2,9 +2,9 @@ package io.github.amerebagatelle.campbotkotlin.quotes
 
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import io.github.amerebagatelle.campbotkotlin.info.getInfo
+import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.arguments.MessageArg
-import me.jakejmattson.discordkt.arguments.QuoteArg
 import me.jakejmattson.discordkt.commands.commands
 import kotlin.random.Random
 
@@ -12,7 +12,7 @@ import kotlin.random.Random
 fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
-        execute(QuoteArg(name = "content"), QuoteArg(name = "author")) {
+        execute(AnyArg(name = "content"), AnyArg(name = "author")) {
             respond(embedBuilder = createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"), ephemeral = false)
         }
     }
