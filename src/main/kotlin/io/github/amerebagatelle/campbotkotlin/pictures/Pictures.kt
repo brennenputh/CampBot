@@ -37,7 +37,6 @@ fun upload(category: String, picture: Attachment) {
                 input.copyTo(output)
             }
         }
-        pictureCacheMap.add(Picture(filePath, picture.url))
     } catch (e: Exception) {
         throw FailedToUploadException()
     }
