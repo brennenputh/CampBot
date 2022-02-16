@@ -50,10 +50,6 @@ fun main() {
         }
         onStart {
             logger.info("Bot started.")
-
-            kord.globalCommands.collect {
-                it.delete()
-            }
         }
         onException {
             logger.error("Exception caught\n ${exception.stackTraceToString()}")
