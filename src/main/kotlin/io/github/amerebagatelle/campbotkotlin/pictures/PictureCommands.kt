@@ -1,7 +1,7 @@
 package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.core.behavior.channel.createMessage
-import dev.kord.core.behavior.interaction.followUpEphemeral
+import dev.kord.core.behavior.interaction.followUp
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
@@ -35,17 +35,15 @@ fun pictureCommands() = commands("Pictures") {
                 respond(getErrorEmbed("That category does not exist."))
                 return@execute
             }
+
+            if(interaction != null) interaction?.acknowledgePublic()?.let {
+                it.followUp { content = "Posting pictures..." }
+            }
             repeat(args.second) {
-                if(interaction != null) interaction?.acknowledgeEphemeral()?.let {
-                    it.followUpEphemeral {
-                        addFile(randomPicture(args.first))
-                    }
-                } else {
-                    channel.createMessage {
-                        addFile(randomPicture(args.first))
-                    }
-                }
                 delay(3000)
+                channel.createMessage {
+                    addFile(randomPicture(args.first))
+                }
             }
         }
     }
