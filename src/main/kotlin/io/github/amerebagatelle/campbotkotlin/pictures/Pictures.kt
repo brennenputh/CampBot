@@ -27,29 +27,31 @@ import kotlin.random.nextInt
 
 fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
 
-class FailedToUploadException : Exception()
-
-fun upload(category: String, picture: Attachment) {
-    try {
+/**
+ * @param category The category of the picture
+ * @param picture The attachment
+ *
+ * @return Whether uploading the picture succeeded
+ */
+fun upload(category: String, picture: Attachment): Boolean {
+    return try {
         val filePath = getDataDirectory().resolve("pictures").resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}")
         URL(picture.url).openStream().use { input ->
             FileOutputStream(filePath.toFile()).use { output ->
                 input.copyTo(output)
             }
         }
-    } catch (e: Exception) {
-        throw FailedToUploadException()
-    }
+        true
+    } catch (e: Exception) { false }
 }
 
 fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuilder) -> Unit = {
-    try {
-        upload(category, picture)
+    if(upload(category, picture)) {
         it.apply {
             title = "Success!  File uploaded."
             color = EMBED_GREEN
         }
-    } catch (e: FailedToUploadException) {
+    } else {
         it.apply {
             title = "AAAAAAAAAAAAAAAAAAAAAA EVERYONE PANIC SOMETHING WENT VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY WRONG"
             color = EMBED_RED
@@ -57,19 +59,18 @@ fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuil
     }
 }
 
-// first is the path of the picture in storage, second is the url
-val pictureCacheMap = mutableListOf<Picture>()
+private val pictureCache = mutableListOf<Picture>()
+
+private val json = Json { prettyPrint = true }
 
 fun loadPictureCache() {
-    pictureCacheMap.addAll(Json.decodeFromStream<List<Picture>>(FileInputStream(File("${getDataDirectory()}/pictures/cache.json"))))
+    pictureCache.clear()
+    pictureCache.addAll(json.decodeFromStream<List<Picture>>(FileInputStream(File("${getDataDirectory()}/pictures/cache.json"))))
 }
 
-val jsonFormat = Json {
-    prettyPrint = true
-}
-
-fun syncPictureCache() {
-    jsonFormat.encodeToStream(pictureCacheMap.toList(), FileOutputStream(File("${getDataDirectory()}/pictures/cache.json")))
+fun addToPictureCache(picture: Picture) {
+    pictureCache.add(picture)
+    json.encodeToStream(pictureCache.toList(), FileOutputStream(File("${getDataDirectory()}/pictures/cache.json")))
 }
 
 private val recentlyPostedPicturesMap = getCategories().associateWith { mutableListOf<Int>() }
@@ -87,7 +88,7 @@ fun randomPicture(category: String): Picture {
     recentlyPostedPictures.add(selectedFileIndex)
     if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
 
-    return pictureCacheMap.find { it.path == files[selectedFileIndex].toPath() } ?: Picture(files[selectedFileIndex].toPath(), null)
+    return pictureCache.find { it.path == files[selectedFileIndex].toPath() } ?: Picture(files[selectedFileIndex].toPath(), null)
 }
 
 object PathAsStringSerializer : KSerializer<Path> {

@@ -49,10 +49,7 @@ fun pictureCommands() = commands("Pictures") {
                         addFile(pic.path)
                     }
                 }
-                if(pic.url == null) {
-                    pictureCacheMap.add(Picture(pic.path, response.attachments.first().url))
-                    syncPictureCache()
-                }
+                if(pic.url == null) addToPictureCache(Picture(pic.path, response.attachments.first().url))
             }
         }
     }
