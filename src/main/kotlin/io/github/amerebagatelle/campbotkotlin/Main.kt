@@ -2,6 +2,7 @@ package io.github.amerebagatelle.campbotkotlin
 
 import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
+import io.github.amerebagatelle.campbotkotlin.pictures.loadPictureCache
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import me.jakejmattson.discordkt.dsl.bot
@@ -49,6 +50,8 @@ fun main() {
             watching("for your command")
         }
         onStart {
+            loadPictureCache()
+
             logger.info("Bot started.")
         }
         onException {

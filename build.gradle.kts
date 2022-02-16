@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm") version "1.6.10"
     java
     id("com.github.johnrengelman.shadow") version ("7.0.0")
+    kotlin("plugin.serialization") version "1.6.10"
 }
 
 group = "io.github.amerebagatelle"

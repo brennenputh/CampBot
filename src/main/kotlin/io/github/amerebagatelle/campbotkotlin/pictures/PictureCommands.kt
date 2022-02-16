@@ -41,8 +41,17 @@ fun pictureCommands() = commands("Pictures") {
             }
             repeat(args.second) {
                 delay(3000)
-                channel.createMessage {
-                    addFile(randomPicture(args.first))
+                val pic = randomPicture(args.first)
+                val response = channel.createMessage {
+                    if(pic.url != null) {
+                        content = pic.url
+                    } else {
+                        addFile(pic.path)
+                    }
+                }
+                if(pic.url == null) {
+                    pictureCacheMap.add(Picture(pic.path, response.attachments.first().url))
+                    syncPictureCache()
                 }
             }
         }
