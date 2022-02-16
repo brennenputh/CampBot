@@ -25,7 +25,7 @@ import java.nio.file.Path
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().list()!!
+fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
 
 class FailedToUploadException : Exception()
 
