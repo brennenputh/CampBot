@@ -8,7 +8,7 @@ import me.jakejmattson.discordkt.arguments.UserArg
 import me.jakejmattson.discordkt.commands.commands
 
 @Suppress("unused")
-fun slashInfoCommands() = commands("infoSlash") {
+fun slashInfoCommands() = commands("info") {
     slash("getInfo", "Get Info") {
         description = "Get the info on a user, by ID"
         execute(UserArg("user")) {

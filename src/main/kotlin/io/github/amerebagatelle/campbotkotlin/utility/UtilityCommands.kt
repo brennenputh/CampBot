@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
 
 @Suppress("unused")
 fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
-    globalCommand("shutdown") {
+    slash("shutdown") {
         description = "Shut down the bot."
         execute {
             respond {
@@ -26,7 +26,7 @@ fun ownerUtilityCommands() = commands("Owner", Permissions.BOT_OWNER) {
 
 @Suppress("unused")
 fun userUtilityCommands() = commands("Utility") {
-    globalCommand("quotesfile") {
+    slash("quotesfile") {
         description = "Get the quotes file from the bot."
         execute {
             channel.createMessage {

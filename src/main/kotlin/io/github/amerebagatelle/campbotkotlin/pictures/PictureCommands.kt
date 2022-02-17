@@ -53,10 +53,6 @@ fun pictureCommands() = commands("Pictures") {
             }
         }
     }
-}
-
-@Suppress("unused")
-fun pictureSlashCommands() = commands("Pictures") {
     slash("categories") {
         description = "Get the list of available categories of files.  Example: &categories"
         execute {
