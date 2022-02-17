@@ -45,16 +45,18 @@ fun upload(category: String, picture: Attachment): Boolean {
     } catch (e: Exception) { false }
 }
 
-fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuilder) -> Unit = {
-    if(upload(category, picture)) {
-        it.apply {
-            title = "Success!  File uploaded."
-            color = EMBED_GREEN
-        }
-    } else {
-        it.apply {
-            title = "AAAAAAAAAAAAAAAAAAAAAA EVERYONE PANIC SOMETHING WENT VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY VERY WRONG"
-            color = EMBED_RED
+fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (EmbedBuilder) -> Unit = {
+    for (picture in pictures) {
+        if (!upload(category, picture)) {
+            it.apply {
+                title = "Could not upload picture: ${picture.filename}"
+                color = EMBED_RED
+            }
+        } else {
+            it.apply {
+                title = "Success!  File (${picture.filename}) uploaded."
+                color = EMBED_GREEN
+            }
         }
     }
 }
