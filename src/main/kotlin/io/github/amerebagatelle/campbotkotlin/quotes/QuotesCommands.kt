@@ -49,7 +49,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("search") {
         description = "Search for a phrase in the quotes file."
         execute(AnyArg("phrase")) {
-            respond(".")
+            if(interaction != null) respond("\u200B", ephemeral = false)
             val quotes = search(args.first)
             if (quotes.isNotEmpty()) {
                 respondMenu {
