@@ -61,7 +61,7 @@ fun messageListener() = listeners {
     }
     // Auto-create threads in prayer requests
     on<MessageCreateEvent> {
-        if (message.channelId != prayerRequestsChannelId) return@on
+        if (message.channelId != config.prayerRequestsChannelId) return@on
 
         if (System.nanoTime() - lastPrayerRequestTimestamp > 10 * 6e+10) {
             (message.getChannel() as TextChannel).startPublicThreadWithMessage(
@@ -74,7 +74,7 @@ fun messageListener() = listeners {
     // Chaos rules implementation
     on<MessageCreateEvent> {
         if (message.author!!.isBot) return@on
-        if (message.channelId != chaosChannelId) return@on
+        if (message.channelId != config.chaosChannelId) return@on
 
         if (message.content.contains("productiv", true) || message.content.contains("maniac", true)) {
             logger.info("Rulebreaker detected")
@@ -84,7 +84,7 @@ fun messageListener() = listeners {
                 color = EMBED_RED
             }
 
-            val chaosRole = getGuild()?.getRole(chaosRoleId)
+            val chaosRole = getGuild()?.getRole(config.chaosRoleId)
 
             if (member?.roles!!.any { role -> role == chaosRole } && System.nanoTime() - lastPunishmentThreadTimestamp > 100 * 6e+10) {
                 val thread = (message.getChannel() as TextChannel).startPublicThreadWithMessage(
