@@ -47,7 +47,7 @@ fun main() {
             permissions = Permissions
         }
         presence {
-            watching("for your command")
+            watching("and awake")
         }
         onStart {
             loadPictureCache()
