@@ -5,8 +5,8 @@ package io.github.amerebagatelle.campbotkotlin.pictures
 import dev.kord.core.entity.Attachment
 import dev.kord.rest.builder.message.EmbedBuilder
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
-import io.github.amerebagatelle.campbotkotlin.EMBED_RED
 import io.github.amerebagatelle.campbotkotlin.getDataDirectory
+import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -45,18 +45,14 @@ fun upload(category: String, picture: Attachment): Boolean {
     } catch (e: Exception) { false }
 }
 
-fun uploadWithMessage(category: String, pictures: Set<Attachment>): suspend (EmbedBuilder) -> Unit = {
-    for (picture in pictures) {
-        if (!upload(category, picture)) {
-            it.apply {
-                title = "Could not upload picture: ${picture.filename}"
-                color = EMBED_RED
-            }
-        } else {
-            it.apply {
-                title = "Success!  File (${picture.filename}) uploaded."
-                color = EMBED_GREEN
-            }
+fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuilder) -> Unit = {
+    if(!upload(category, picture)) {
+        getErrorEmbed("Failed to upload: ${picture.filename}")
+    } else {
+        it.apply {
+            title = "Success!  Picture uploaded."
+            color = EMBED_GREEN
+            image = picture.url
         }
     }
 }
