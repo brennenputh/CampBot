@@ -2,7 +2,6 @@ package io.github.amerebagatelle.campbotkotlin.pictures
 
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.interaction.response.followUp
-import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.AttachmentArg
@@ -49,21 +48,6 @@ fun pictureCommands() = commands("Pictures") {
                     }
                 }
                 if(pic.url == null) addToPictureCache(Picture(pic.path, response.attachments.first().url))
-            }
-        }
-    }
-    slash("categories") {
-        description = "Get the list of available categories of files.  Example: &categories"
-        execute {
-            val dirs = getCategories()
-            val stringBuilder = StringBuilder()
-            for (dir in dirs) {
-                stringBuilder.append("`").append(dir).append("`\n")
-            }
-            respond {
-                title = "Categories"
-                description = stringBuilder.toString()
-                color = EMBED_GREEN
             }
         }
     }
