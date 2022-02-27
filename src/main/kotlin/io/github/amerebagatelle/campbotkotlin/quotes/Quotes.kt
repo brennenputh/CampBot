@@ -26,7 +26,7 @@ fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): 
     val quotes = getQuotes().toMutableList()
     quotes.add(quote)
 
-    Json.encodeToStream(quotes, quoteFile.outputStream())
+    Json.encodeToStream(quotes.toList(), quoteFile.outputStream())
 
     return quoteNumber
 }
@@ -42,7 +42,7 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "
     }
 }
 
-fun quoteTotal() = getQuotes().maxOf { it.number }
+fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
 
 fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }
 
