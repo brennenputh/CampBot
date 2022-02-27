@@ -17,7 +17,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
         execute(AnyArg(name = "content"), AnyArg(name = "author")) {
-            respond(embedBuilder = createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"), ephemeral = false)
+            respond(false, createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
     }
     slash("createquotemessage", "Create Quote") {
@@ -31,13 +31,13 @@ fun quoteSlashCommands() = commands("Quotes") {
                 respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
                 return@execute
             }
-            respond(embedBuilder = createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"), ephemeral = false)
+            respond(false, createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"))
         }
     }
     slash("quote") {
         description = "Get a quote."
         execute(IntegerArg(name = "quoteNumber")) {
-            respond(getQuoteMessageForNumber(args.first), ephemeral = false)
+            respond(false, getQuoteMessageForNumber(args.first))
         }
     }
     slash("randomquote") {
@@ -49,7 +49,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("search") {
         description = "Search for a phrase in the quotes file."
         execute(AnyArg("phrase")) {
-            if(interaction != null) respond("\u200B", ephemeral = false)
+            if(interaction != null) respond("\u200B", false)
             val quotes = search(args.first)
             if (quotes.isNotEmpty()) {
                 respondMenu {

@@ -1,59 +1,32 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package io.github.amerebagatelle.campbotkotlin.quotes
 
-import com.beust.klaxon.JsonReader
-import com.beust.klaxon.Klaxon
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import dev.kord.rest.builder.message.EmbedBuilder
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.getDataDirectory
 import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
-import java.io.FileReader
-import java.io.FileWriter
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
 
 private val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
 
-fun findQuote(number: Int): Quote? {
-    var author: String? = null
-    var content: String? = null
-    var quotedBy: String? = null
-    JsonReader(FileReader(quoteFile)).use { reader ->
-        reader.beginObject {
-            while (reader.hasNext()) {
-                if (reader.nextName() == number.toString()) {
-                    reader.beginObject {
-                        while (reader.hasNext()) {
-                            when (reader.nextName()) {
-                                "author" -> author = reader.nextString()
-                                "content" -> content = reader.nextString()
-                                "quotedBy" -> quotedBy = reader.nextString()
-                            }
-                        }
-                    }
-                } else {
-                    reader.beginObject {
-                        while (reader.hasNext()) {
-                            reader.nextName()
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if (author == null || content == null) return null
+fun getQuotes(): List<Quote> = Json.decodeFromStream(quoteFile.inputStream())
 
-    return Quote(number, author!!, content!!, quotedBy ?: "Unknown")
-}
+fun findQuote(number: Int): Quote? = getQuotes().find { it.number == number }
 
 fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): Int {
     val quoteNumber = quoteTotal() + 1
+    val quote = Quote(quoteNumber, author, content, quotedBy)
 
-    val json = Klaxon().parseJsonObject(FileReader(quoteFile))
+    val quotes = getQuotes().toMutableList()
+    quotes.add(quote)
 
-    json[quoteNumber.toString()] = mapOf(Pair("author", author), Pair("content", content), Pair("quotedBy", quotedBy))
-
-    val writer = FileWriter(quoteFile)
-    writer.write(json.toJsonString(true))
-    writer.close()
+    Json.encodeToStream(quotes, quoteFile.outputStream())
 
     return quoteNumber
 }
@@ -69,49 +42,9 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "
     }
 }
 
-fun quoteTotal(): Int {
-    var quoteNumber = 0
-    JsonReader(FileReader(quoteFile)).use { reader ->
-        reader.beginObject {
-            while (reader.hasNext()) {
-                val newNumber = Integer.parseInt(reader.nextName())
-                if (newNumber > quoteNumber) {
-                    quoteNumber = newNumber
-                }
-                reader.beginObject {
-                    while (reader.hasNext()) reader.nextName()
-                }
-            }
-        }
-    }
-    return quoteNumber
-}
+fun quoteTotal() = getQuotes().maxOf { it.number }
 
-fun search(searchTerm: String): List<Quote> {
-    val quotes = mutableListOf<Pair<Int, Quote>>()
-    JsonReader(FileReader(quoteFile)).use { reader ->
-        reader.beginObject {
-            while (reader.hasNext()) {
-                val number = Integer.parseInt(reader.nextName())
-                reader.beginObject {
-                    var author = ""
-                    var content = ""
-                    while (reader.hasNext()) {
-                        when (reader.nextName()) {
-                            "author" -> author = reader.nextString()
-                            "content" -> content = reader.nextString()
-                        }
-                    }
-                    val relevance = FuzzySearch.tokenSetRatio(content, searchTerm)
-                    if (relevance > 50 || author.contains(searchTerm, true)) quotes.add(
-                        Pair(relevance, Quote(number, author, content))
-                    )
-                }
-            }
-        }
-    }
-    return quotes.sortedBy { it.first }.map { it.second }
-}
+fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }
 
 fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
     it.apply {
@@ -126,4 +59,5 @@ fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
 
 fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
 
+@Serializable
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")
