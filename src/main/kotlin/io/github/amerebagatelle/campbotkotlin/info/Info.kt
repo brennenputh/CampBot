@@ -1,12 +1,18 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package io.github.amerebagatelle.campbotkotlin.info
 
 import com.beust.klaxon.Klaxon
 import dev.kord.common.entity.Snowflake
 import io.github.amerebagatelle.campbotkotlin.getDataDirectory
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
 import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 
+@Serializable
 data class UserInfo(
     var id: String,
     var username: String,
@@ -18,12 +24,11 @@ val klaxon = Klaxon()
 val infoFile: File = getDataDirectory().resolve("userInfo.json").toFile()
 
 fun getInfo(userId: Snowflake): UserInfo {
-    val infoList = klaxon.parseArray<UserInfo>(FileReader(infoFile))
-    return infoList?.firstOrNull { it.id == userId.toString() } ?: UserInfo(userId.toString(), "", "", "")
+    return Json.decodeFromStream<List<UserInfo>>(infoFile.inputStream()).firstOrNull { it.id == userId.toString() } ?: UserInfo(userId.toString(), "", "", "")
 }
 
 fun updateInfo(userId: Snowflake, info: UserInfo) {
-    val infoList = klaxon.parseArray<UserInfo>(FileReader(infoFile))!!.toMutableList()
+    val infoList = Json.decodeFromStream<List<UserInfo>>(infoFile.inputStream()).toMutableList()
 
     val entry = infoList.firstOrNull { it.id == userId.toString() }?.let {
         it.username = info.username
@@ -33,8 +38,5 @@ fun updateInfo(userId: Snowflake, info: UserInfo) {
     }
     if (entry == null) infoList.add(info)
 
-    FileWriter(infoFile).use {
-        it.write(klaxon.toJsonString(infoList))
-        it.close()
-    }
+    Json.encodeToStream(infoList.toList(), infoFile.outputStream())
 }

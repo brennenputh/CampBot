@@ -3,7 +3,7 @@ package io.github.amerebagatelle.campbotkotlin.info
 import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
 import io.github.amerebagatelle.campbotkotlin.Permissions
 import me.jakejmattson.discordkt.arguments.AnyArg
-import me.jakejmattson.discordkt.arguments.QuoteArg
+import me.jakejmattson.discordkt.arguments.ChoiceArg
 import me.jakejmattson.discordkt.arguments.UserArg
 import me.jakejmattson.discordkt.commands.commands
 
@@ -26,7 +26,7 @@ fun slashInfoCommands() = commands("info") {
     }
     slash("updateInfo") {
         description = "Update the info the bot has on you."
-        execute(AnyArg("infoValue"), QuoteArg("setpoint")) {
+        execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), AnyArg("setpoint")) {
             val info = getInfo(author.id)
             info.id = author.id.toString()
             info.username = author.username
@@ -45,7 +45,7 @@ fun slashInfoCommands() = commands("info") {
     slash("executiveUpdateInfo") {
         requiredPermission = Permissions.BOT_OWNER
         description = "Bot-owner only.  Allows updating the info of any user."
-        execute(AnyArg("infoValue"), UserArg("user"), QuoteArg("setpoint")) {
+        execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), UserArg("user"), AnyArg("setpoint")) {
             val info = getInfo(args.second.id)
             info.id = args.second.id.toString()
             info.username = args.second.username
