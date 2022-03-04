@@ -24,11 +24,11 @@ jobs:
       - name: Login
         env:
           GITHUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run: docker login ghcr.io --username AMereBagatelle --password "$GITHUB_TOKEN"
+        run: docker login ghcr.io --username brennenputh --password "$GITHUB_TOKEN"
       - name: Push Image
         run: |
           docker buildx build \
-                  --tag  ghcr.io/amerebagatelle/t/bot:"$GITHUB_SHA" \
-                  --tag  ghcr.io/amerebagatelle/t/bot:latest \
+                  --tag  ghcr.io/brennenputh/t/bot:"$GITHUB_SHA" \
+                  --tag  ghcr.io/brennenputh/t/bot:latest \
                   --file ./Dockerfile \
                   --output type=image,push=true .
