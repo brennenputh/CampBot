@@ -22,7 +22,7 @@ fun main() {
             permissions = Permissions
         }
         presence {
-            watching("and awake")
+            watching("ya'll")
         }
         onStart {
             loadPictureCache()
