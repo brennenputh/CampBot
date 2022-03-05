@@ -59,5 +59,7 @@ fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
 
 fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
 
+fun autocompleteNames() = getQuotes().map { it.author }.distinct()
+
 @Serializable
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")

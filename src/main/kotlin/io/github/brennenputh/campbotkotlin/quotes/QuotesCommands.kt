@@ -16,7 +16,7 @@ import kotlin.random.Random
 fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
-        execute(AnyArg(name = "content"), AnyArg(name = "author")) {
+        execute(AnyArg(name = "content"), AnyArg(name = "author").autocomplete { autocompleteNames().filter { it.contains(input) } }) {
             respond(false, createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
     }
