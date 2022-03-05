@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package io.github.amerebagatelle.campbotkotlin.info
+package io.github.brennenputh.campbotkotlin.info
 
 import com.beust.klaxon.Klaxon
 import dev.kord.common.entity.Snowflake
-import io.github.amerebagatelle.campbotkotlin.getDataDirectory
+import io.github.brennenputh.campbotkotlin.getDataDirectory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

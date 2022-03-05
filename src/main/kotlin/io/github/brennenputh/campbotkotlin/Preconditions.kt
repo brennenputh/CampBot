@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin
+package io.github.brennenputh.campbotkotlin
 
 import me.jakejmattson.discordkt.dsl.precondition
 

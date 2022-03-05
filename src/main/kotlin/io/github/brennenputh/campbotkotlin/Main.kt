@@ -1,7 +1,7 @@
-package io.github.amerebagatelle.campbotkotlin
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.annotation.KordPreview
-import io.github.amerebagatelle.campbotkotlin.pictures.loadPictureCache
+import io.github.brennenputh.campbotkotlin.pictures.loadPictureCache
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

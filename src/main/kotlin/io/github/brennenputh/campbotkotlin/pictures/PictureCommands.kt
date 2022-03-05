@@ -1,8 +1,8 @@
-package io.github.amerebagatelle.campbotkotlin.pictures
+package io.github.brennenputh.campbotkotlin.pictures
 
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.interaction.response.followUp
-import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
+import io.github.brennenputh.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.arguments.AttachmentArg
 import me.jakejmattson.discordkt.arguments.ChoiceArg

@@ -1,12 +1,12 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package io.github.amerebagatelle.campbotkotlin.quotes
+package io.github.brennenputh.campbotkotlin.quotes
 
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import dev.kord.rest.builder.message.EmbedBuilder
-import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
-import io.github.amerebagatelle.campbotkotlin.getDataDirectory
-import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
+import io.github.brennenputh.campbotkotlin.EMBED_GREEN
+import io.github.brennenputh.campbotkotlin.getDataDirectory
+import io.github.brennenputh.campbotkotlin.getErrorEmbed
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

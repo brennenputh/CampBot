@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.any
@@ -7,7 +7,7 @@ import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
-import io.github.amerebagatelle.campbotkotlin.quotes.getQuoteMessageForNumber
+import io.github.brennenputh.campbotkotlin.quotes.getQuoteMessageForNumber
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.dsl.listeners
 import java.time.LocalDateTime

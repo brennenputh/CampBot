@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.entity.Snowflake
 import io.github.cdimascio.dotenv.dotenv

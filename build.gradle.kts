@@ -29,5 +29,5 @@ tasks.withType<KotlinCompile> {
 }
 
 application {
-    mainClass.set("io.github.amerebagatelle.campbotkotlin.MainKt")
+    mainClass.set("io.github.brennenputh.campbotkotlin.MainKt")
 }

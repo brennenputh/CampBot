@@ -1,10 +1,10 @@
-package io.github.amerebagatelle.campbotkotlin.quotes
+package io.github.brennenputh.campbotkotlin.quotes
 
 import dev.kord.x.emoji.Emojis
-import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
-import io.github.amerebagatelle.campbotkotlin.EMBED_RED
-import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
-import io.github.amerebagatelle.campbotkotlin.info.getInfo
+import io.github.brennenputh.campbotkotlin.EMBED_GREEN
+import io.github.brennenputh.campbotkotlin.EMBED_RED
+import io.github.brennenputh.campbotkotlin.getErrorEmbed
+import io.github.brennenputh.campbotkotlin.info.getInfo
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.arguments.MessageArg
@@ -43,7 +43,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("randomquote") {
         description = "Get a random quote."
         execute {
-            respond(getQuoteMessageForNumber(Random.Default.nextInt(quoteTotal()) + 1))
+            respond(getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1))
         }
     }
     slash("search") {

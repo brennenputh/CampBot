@@ -1,7 +1,7 @@
-package io.github.amerebagatelle.campbotkotlin.info
+package io.github.brennenputh.campbotkotlin.info
 
-import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
-import io.github.amerebagatelle.campbotkotlin.Permissions
+import io.github.brennenputh.campbotkotlin.EMBED_GREEN
+import io.github.brennenputh.campbotkotlin.Permissions
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.ChoiceArg
 import me.jakejmattson.discordkt.arguments.UserArg

@@ -1,12 +1,12 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package io.github.amerebagatelle.campbotkotlin.pictures
+package io.github.brennenputh.campbotkotlin.pictures
 
 import dev.kord.core.entity.Attachment
 import dev.kord.rest.builder.message.EmbedBuilder
-import io.github.amerebagatelle.campbotkotlin.EMBED_GREEN
-import io.github.amerebagatelle.campbotkotlin.getDataDirectory
-import io.github.amerebagatelle.campbotkotlin.getErrorEmbed
+import io.github.brennenputh.campbotkotlin.EMBED_GREEN
+import io.github.brennenputh.campbotkotlin.getDataDirectory
+import io.github.brennenputh.campbotkotlin.getErrorEmbed
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

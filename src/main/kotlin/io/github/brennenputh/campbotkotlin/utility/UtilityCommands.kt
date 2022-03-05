@@ -1,10 +1,10 @@
-package io.github.amerebagatelle.campbotkotlin.utility
+package io.github.brennenputh.campbotkotlin.utility
 
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.rest.builder.message.create.embed
-import io.github.amerebagatelle.campbotkotlin.EMBED_RED
-import io.github.amerebagatelle.campbotkotlin.Permissions
-import io.github.amerebagatelle.campbotkotlin.getDataDirectory
+import io.github.brennenputh.campbotkotlin.EMBED_RED
+import io.github.brennenputh.campbotkotlin.Permissions
+import io.github.brennenputh.campbotkotlin.getDataDirectory
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.commands.commands
 import kotlin.system.exitProcess

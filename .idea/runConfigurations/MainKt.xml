@@ -3,7 +3,7 @@
     <envs>
       <env name="dev" value="true" />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="io.github.amerebagatelle.campbotkotlin.MainKt" />
+    <option name="MAIN_CLASS_NAME" value="io.github.brennenputh.campbotkotlin.MainKt" />
     <module name="campbot.main" />
     <shortenClasspath name="NONE" />
     <option name="VM_PARAMETERS" value="-Dorg.slf4j.simpleLogger.log.campbot=info" />

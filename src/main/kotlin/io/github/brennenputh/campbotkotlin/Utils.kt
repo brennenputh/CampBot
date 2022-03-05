@@ -1,4 +1,4 @@
-package io.github.amerebagatelle.campbotkotlin
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.EmbedBuilder
