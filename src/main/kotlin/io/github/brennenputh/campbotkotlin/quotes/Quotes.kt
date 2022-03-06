@@ -86,7 +86,8 @@ fun autocompleteNames() = listOf(
     "Olivia",
     "Sadie",
     "Maya",
-    "Steven"
+    "Steven",
+    "Anonymous"
 )
 
 @Serializable
