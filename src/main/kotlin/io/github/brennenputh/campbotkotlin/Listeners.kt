@@ -1,7 +1,6 @@
 package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.entity.Snowflake
-import dev.kord.core.any
 import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel

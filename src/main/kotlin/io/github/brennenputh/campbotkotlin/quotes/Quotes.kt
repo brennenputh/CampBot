@@ -65,6 +65,7 @@ fun autocompleteNames() = listOf(
     "Adam",
     "Allison",
     "Grace",
+    "Gracie",
     "Grace C",
     "Lindsay",
     "Ethan",
