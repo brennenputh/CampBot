@@ -50,7 +50,7 @@ fun uploadWithMessage(category: String, picture: Attachment): suspend (EmbedBuil
         getErrorEmbed("Failed to upload: ${picture.filename}")
     } else {
         it.apply {
-            title = "Success!  Picture uploaded."
+            title = "Success!  Picture uploaded to category `$category`."
             color = EMBED_GREEN
             image = picture.url
         }
