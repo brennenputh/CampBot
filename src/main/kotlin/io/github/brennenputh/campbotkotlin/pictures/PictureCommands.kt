@@ -34,9 +34,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            if(interaction != null) interaction?.deferPublicMessage()?.let {
-                it.followUp { content = "Posting pictures..." }
-            }
+            respond("Posting pictures...")
             repeat(args.second) {
                 delay(3000)
                 val pic = randomPicture(args.first)
