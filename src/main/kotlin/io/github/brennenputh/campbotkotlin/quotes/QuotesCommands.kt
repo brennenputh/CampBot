@@ -51,6 +51,7 @@ fun quoteSlashCommands() = commands("Quotes") {
         execute(AnyArg("phrase")) {
             val quotes = search(args.first)
             if (quotes.isNotEmpty()) {
+                respond("Searching...", false)
                 respondMenu {
                     for (i in quotes.indices step 20) {
                         val subQuotes = quotes.slice(i until quotes.size).take(20)

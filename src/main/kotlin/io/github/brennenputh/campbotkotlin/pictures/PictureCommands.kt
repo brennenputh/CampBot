@@ -34,7 +34,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            respond("Posting pictures...")
+            respond("Posting pictures...", false)
             repeat(args.second) {
                 delay(3000)
                 val pic = randomPicture(args.first)
