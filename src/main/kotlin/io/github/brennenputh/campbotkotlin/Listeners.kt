@@ -22,34 +22,6 @@ var lastPrayerRequestTimestamp: Long = 0
 
 @Suppress("unused")
 fun messageListener() = listeners {
-    // Expand discord message links
-    on<MessageCreateEvent> {
-        val links = urlRegex.findAll(message.content)
-        for (link in links) {
-            try {
-                val serverId = Snowflake(link.groupValues[1])
-                val channelId = Snowflake(link.groupValues[2])
-                val messageId = Snowflake(link.groupValues[3])
-
-                val server = kord.getGuild(serverId)
-                val grabbedChannel = server?.getChannelOf<TextChannel>(channelId)
-                val grabbedMessage = grabbedChannel?.getMessage(messageId)
-                message.channel.createEmbed {
-                    title = "Quoted from " + grabbedMessage?.author?.username
-                    description = grabbedMessage?.content
-                }
-            } catch (e: KtorRequestException) {
-                val error = message.channel.createEmbed { getErrorEmbed(when(e.httpResponse.status.value) {
-                        403 -> "No access to linked message."
-                        404 -> "Linked message not found."
-                        else -> "Could not get message from link."
-                    }).invoke(this)
-                }
-                delay(5000)
-                error.delete()
-            }
-        }
-    }
     // Inline quotes
     on<MessageCreateEvent> {
         // Check for inlined quotes in the message
@@ -70,8 +42,37 @@ fun messageListener() = listeners {
             lastPrayerRequestTimestamp = System.nanoTime()
         }
     }
+    // Expand discord message links
+    on<MessageCreateEvent> {
+        val links = urlRegex.findAll(message.content)
+        for (link in links) {
+            try {
+                val serverId = Snowflake(link.groupValues[1])
+                val channelId = Snowflake(link.groupValues[2])
+                val messageId = Snowflake(link.groupValues[3])
+
+                val server = kord.getGuild(serverId)
+                val grabbedChannel = server?.getChannelOf<TextChannel>(channelId)
+                val grabbedMessage = grabbedChannel?.getMessage(messageId)
+                message.channel.createEmbed {
+                    title = "Quoted from " + grabbedMessage?.author?.username
+                    description = grabbedMessage?.content
+                }
+            } catch (e: KtorRequestException) {
+                val error = message.channel.createEmbed { getErrorEmbed(when(e.httpResponse.status.value) {
+                    403 -> "No access to linked message."
+                    404 -> "Linked message not found."
+                    else -> "Could not get message from link."
+                }).invoke(this)
+                }
+                delay(5000)
+                error.delete()
+            }
+        }
+    }
     // Chaos rules implementation
     on<MessageCreateEvent> {
+        if(message.interaction != null) return@on
         if (message.author!!.isBot) return@on
         if (message.channelId != config.chaosChannelId) return@on
 
