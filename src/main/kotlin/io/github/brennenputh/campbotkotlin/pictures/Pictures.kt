@@ -25,7 +25,9 @@ import java.nio.file.Path
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
+val picturesDirectory: Path = getDataDirectory().resolve("pictures")
+
+fun getCategories(): Array<String> = picturesDirectory.toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
 
 /**
  * @param category The category of the picture
@@ -35,7 +37,7 @@ fun getCategories(): Array<String> = getDataDirectory().resolve("pictures").toFi
  */
 fun upload(category: String, picture: Attachment): Boolean {
     return try {
-        val filePath = getDataDirectory().resolve("pictures").resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}")
+        val filePath = picturesDirectory.resolve(category).resolve("${System.currentTimeMillis()}${picture.filename}")
         URL(picture.url).openStream().use { input ->
             FileOutputStream(filePath.toFile()).use { output ->
                 input.copyTo(output)
@@ -63,18 +65,18 @@ private val json = Json { prettyPrint = true }
 
 fun loadPictureCache() {
     pictureCache.clear()
-    pictureCache.addAll(json.decodeFromStream<List<Picture>>(FileInputStream(File("${getDataDirectory()}/pictures/cache.json"))))
+    pictureCache.addAll(json.decodeFromStream<List<Picture>>(FileInputStream(picturesDirectory.resolve("cache.json").toFile())))
 }
 
 fun addToPictureCache(picture: Picture) {
     pictureCache.add(picture)
-    json.encodeToStream(pictureCache.toList(), FileOutputStream(File("${getDataDirectory()}/pictures/cache.json")))
+    json.encodeToStream(pictureCache.toList(), FileOutputStream(picturesDirectory.resolve("cache.json").toFile()))
 }
 
 private val recentlyPostedPicturesMap = getCategories().associateWith { mutableListOf<Int>() }
 
 fun randomPicture(category: String): Picture {
-    val files = getDataDirectory().resolve("pictures").resolve(category).toFile().listFiles()!!
+    val files = picturesDirectory.resolve(category).toFile().listFiles()!!
     val recentlyPostedPictures = recentlyPostedPicturesMap[category] ?: mutableListOf(1)
 
     var selectedFileIndex = Random.Default.nextInt(files.indices)
