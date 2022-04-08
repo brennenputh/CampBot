@@ -1,6 +1,7 @@
 package io.github.brennenputh.campbotkotlin.utility
 
 import dev.kord.core.behavior.channel.createMessage
+import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.rest.builder.message.create.embed
 import io.github.brennenputh.campbotkotlin.EMBED_RED
 import io.github.brennenputh.campbotkotlin.Permissions
@@ -29,7 +30,7 @@ fun userUtilityCommands() = commands("Utility") {
     slash("quotesfile") {
         description = "Get the quotes file from the bot."
         execute {
-            channel.createMessage {
+            interaction?.respondEphemeral {
                 embed {
                     title = "The quote file for you..."
                 }
