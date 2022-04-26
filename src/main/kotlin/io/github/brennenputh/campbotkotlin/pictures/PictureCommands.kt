@@ -19,7 +19,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            respond(false, uploadWithMessage(args.first, args.second))
+            respond(uploadWithMessage(args.first, args.second))
         }
     }
     slash("post") {
@@ -34,7 +34,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            respond("Posting pictures...", false)
+            respond("Posting pictures...")
             repeat(args.second) {
                 delay(3000)
                 val pic = randomPicture(args.first)
