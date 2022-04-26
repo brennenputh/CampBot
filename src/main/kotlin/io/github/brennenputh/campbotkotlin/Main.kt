@@ -35,7 +35,7 @@ fun main() {
             logger.info("Bot started.")
         }
         onException {
-            logger.error("Exception caught\n ${exception.stackTraceToString()}")
+            logger.error("Exception caught:\n ${exception.stackTraceToString()}")
         }
     }
 }
