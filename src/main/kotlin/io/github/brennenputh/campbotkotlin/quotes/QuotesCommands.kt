@@ -1,5 +1,8 @@
 package io.github.brennenputh.campbotkotlin.quotes
 
+import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.rest.builder.message.EmbedBuilder
+import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import io.github.brennenputh.campbotkotlin.EMBED_GREEN
 import io.github.brennenputh.campbotkotlin.EMBED_RED
@@ -17,33 +20,33 @@ fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
         execute(AnyArg(name = "content"), AnyArg(name = "author").autocomplete { autocompleteNames().filter { it.contains(input) } }) {
-            respond(false, createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
+            respondPublic("", createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
     }
     slash("createquotemessage", "Create Quote") {
         description = "Create a quote with a message."
         execute(MessageArg) {
             val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
-                respond(getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
+                respond("", getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
                 return@execute
             }
             if (authorName.isEmpty()) {
                 respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
                 return@execute
             }
-            respond(false, createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"))
+            respondPublic("", createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"))
         }
     }
     slash("quote") {
         description = "Get a quote."
         execute(IntegerArg(name = "quoteNumber")) {
-            respond(false, getQuoteMessageForNumber(args.first))
+            respondPublic("", getQuoteMessageForNumber(args.first))
         }
     }
     slash("randomquote") {
         description = "Get a random quote."
         execute {
-            respond(getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1))
+            respondPublic("", getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1))
         }
     }
     slash("search") {
@@ -51,7 +54,9 @@ fun quoteSlashCommands() = commands("Quotes") {
         execute(AnyArg("phrase")) {
             val quotes = search(args.first)
             if (quotes.isNotEmpty()) {
-                respond("Searching...")
+                interaction?.respondPublic {
+                    content = "Searching..."
+                }
                 respondMenu {
                     for (i in quotes.indices step 20) {
                         val subQuotes = quotes.slice(i until quotes.size).take(20)
@@ -81,7 +86,7 @@ fun quoteSlashCommands() = commands("Quotes") {
                     }
                 }
             } else {
-                respond {
+                respondPublic("") {
                     title = "No results found."
                     description = "Did not find any matches for your query."
                     color = EMBED_RED

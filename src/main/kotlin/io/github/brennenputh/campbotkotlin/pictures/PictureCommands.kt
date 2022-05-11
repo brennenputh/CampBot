@@ -19,7 +19,7 @@ fun pictureCommands() = commands("Pictures") {
                 return@execute
             }
 
-            respond(uploadWithMessage(args.first, args.second))
+            respondPublic("", uploadWithMessage(args.first, args.second))
         }
     }
     slash("post") {

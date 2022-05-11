@@ -13,7 +13,7 @@ fun slashInfoCommands() = commands("info") {
         description = "Get the info on a user, by ID"
         execute(UserArg("user")) {
             val info = getInfo(args.first.id)
-            respond {
+            respondPublic("") {
                 title = "Info for ${args.first.username}"
                 description = """
                     ID: ${info.id}
@@ -35,7 +35,7 @@ fun slashInfoCommands() = commands("info") {
                 "location" -> info.location = args.second
             }
             updateInfo(author.id, info)
-            respond {
+            respondPublic("") {
                 title = "Info updated."
                 description = "Your ${args.first} has been updated."
                 color = EMBED_GREEN
@@ -54,7 +54,7 @@ fun slashInfoCommands() = commands("info") {
                 "location" -> info.location = args.third
             }
             updateInfo(args.second.id, info)
-            respond {
+            respondPublic("") {
                 title = "Info updated."
                 description = "${args.second.username}'s ${args.first} has been updated."
                 color = EMBED_GREEN
