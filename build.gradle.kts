@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
     java
     id("com.github.johnrengelman.shadow") version ("7.0.0")
     kotlin("plugin.serialization") version "1.6.10"
@@ -20,7 +20,6 @@ dependencies {
     implementation("me.jakejmattson:DiscordKt:0.23.0-SNAPSHOT")
 
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
-    implementation("com.beust:klaxon:5.5")
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")
 }
 

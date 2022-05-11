@@ -2,7 +2,6 @@
 
 package io.github.brennenputh.campbotkotlin.info
 
-import com.beust.klaxon.Klaxon
 import dev.kord.common.entity.Snowflake
 import io.github.brennenputh.campbotkotlin.getDataDirectory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -20,7 +19,6 @@ data class UserInfo(
     var location: String
 )
 
-val klaxon = Klaxon()
 val infoFile: File = getDataDirectory().resolve("userInfo.json").toFile()
 
 fun getInfo(userId: Snowflake): UserInfo {
