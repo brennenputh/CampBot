@@ -34,7 +34,7 @@ fun quoteSlashCommands() = commands("Quotes") {
                 respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
                 return@execute
             }
-            respondPublic("", createQuoteWithMessage(args.first.content, authorName, "${author.username}#${author.discriminator}"))
+            respondPublic("", createQuoteWithMessage(authorName, args.first.content, "${author.username}#${author.discriminator}"))
         }
     }
     slash("quote") {

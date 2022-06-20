@@ -88,6 +88,14 @@ fun autocompleteNames() = listOf(
     "Sadie",
     "Maya",
     "Steven",
+    "Elliot",
+    "Chris",
+    "Noelle",
+    "Simone",
+    "Bailee",
+    "Jonathan",
+    "Herbert",
+    "Aaron",
     "Anonymous"
 )
 
