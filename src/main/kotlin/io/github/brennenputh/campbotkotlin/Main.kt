@@ -24,11 +24,6 @@ fun main() {
             watching("ya'll")
         }
         onStart {
-            if(!File("wordlist.csv").exists()) {
-                @Suppress("BlockingMethodInNonBlockingContext")
-                File("wordlist.csv").createNewFile()
-            }
-
             loadPictureCache()
 
             logger.info("Bot started.")

@@ -1,8 +1,6 @@
 package io.github.brennenputh.campbotkotlin.quotes
 
 import dev.kord.core.behavior.interaction.respondPublic
-import dev.kord.rest.builder.message.EmbedBuilder
-import dev.kord.rest.builder.message.create.embed
 import dev.kord.x.emoji.Emojis
 import io.github.brennenputh.campbotkotlin.EMBED_GREEN
 import io.github.brennenputh.campbotkotlin.EMBED_RED
@@ -19,7 +17,7 @@ import kotlin.random.Random
 fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote") {
         description = "Create a quote."
-        execute(AnyArg(name = "content"), AnyArg(name = "author").autocomplete { autocompleteNames().filter { it.contains(input) } }) {
+        execute(AnyArg(name = "content"), AnyArg(name = "author")) {
             respondPublic("", createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
     }
