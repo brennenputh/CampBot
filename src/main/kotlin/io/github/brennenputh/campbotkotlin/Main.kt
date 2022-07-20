@@ -19,7 +19,6 @@ fun main() {
         configure {
             commandReaction = null
             theme = java.awt.Color(0, 255, 0)
-            permissions = Permissions
         }
         presence {
             watching("ya'll")

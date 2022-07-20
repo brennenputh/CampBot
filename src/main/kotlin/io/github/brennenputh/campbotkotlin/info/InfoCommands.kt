@@ -1,7 +1,8 @@
 package io.github.brennenputh.campbotkotlin.info
 
+import dev.kord.common.entity.Permission
+import dev.kord.common.entity.Permissions
 import io.github.brennenputh.campbotkotlin.EMBED_GREEN
-import io.github.brennenputh.campbotkotlin.Permissions
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.ChoiceArg
 import me.jakejmattson.discordkt.arguments.UserArg
@@ -43,7 +44,7 @@ fun slashInfoCommands() = commands("info") {
         }
     }
     slash("executiveUpdateInfo") {
-        requiredPermission = Permissions.BOT_OWNER
+        requiredPermissions = Permissions(Permission.Administrator)
         description = "Bot-owner only.  Allows updating the info of any user."
         execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), UserArg("user"), AnyArg("setpoint")) {
             val info = getInfo(args.second.id)
