@@ -6,7 +6,6 @@ import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
-import io.github.brennenputh.campbotkotlin.quotes.getQuoteMessageForNumber
 import kotlinx.coroutines.delay
 import me.jakejmattson.discordkt.dsl.listeners
 import java.time.LocalDateTime
