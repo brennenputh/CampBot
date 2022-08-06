@@ -1,8 +1,7 @@
-package io.github.brennenputh.campbotkotlin.utility
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.rest.builder.message.create.embed
-import io.github.brennenputh.campbotkotlin.getDataDirectory
 import me.jakejmattson.discordkt.commands.commands
 
 @Suppress("unused")
