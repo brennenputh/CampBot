@@ -13,7 +13,6 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
-import me.jakejmattson.discordkt.arguments.MessageArg
 import me.jakejmattson.discordkt.commands.commands
 import kotlin.math.floor
 import kotlin.random.Random
@@ -26,19 +25,16 @@ fun quoteSlashCommands() = commands("Quotes") {
             respondPublic("", createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
     }
-    slash("createquotemessage", "Create Quote") {
-        description = "Create a quote with a message."
-        execute(MessageArg) {
-            val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
-                respond("", getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
-                return@execute
-            }
-            if (authorName.isEmpty()) {
-                respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
-                return@execute
-            }
-            respondPublic("", createQuoteWithMessage(authorName, args.first.content, "${author.username}#${author.discriminator}"))
+    message("Create Quote", "createquotemessage", "Create a quote with a message.") {
+        val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
+            respond("", getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
+            return@message
         }
+        if (authorName.isEmpty()) {
+            respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
+            return@message
+        }
+        respondPublic("", createQuoteWithMessage(authorName, args.first.content, "${author.username}#${author.discriminator}"))
     }
     slash("quote") {
         description = "Get a quote."

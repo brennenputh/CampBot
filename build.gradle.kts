@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation("me.jakejmattson:DiscordKt:0.23.0-SNAPSHOT")
+    implementation("me.jakejmattson:DiscordKt:0.23.2")
 
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")

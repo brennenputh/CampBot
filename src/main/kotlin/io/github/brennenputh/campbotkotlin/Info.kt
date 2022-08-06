@@ -18,19 +18,16 @@ import java.io.File
 
 @Suppress("unused")
 fun slashInfoCommands() = commands("info") {
-    slash("getInfo", "Get Info") {
-        description = "Get the info on a user, by ID"
-        execute(UserArg("user")) {
-            val info = getInfo(args.first.id)
-            respondPublic("") {
-                title = "Info for ${args.first.username}"
-                description = """
-                    ID: ${info.id}
-                    Username: ${info.username}
-                    Real name: ${info.realName}
-                    Location: ${info.location}
-                """.trimIndent()
-            }
+    user("Get Info", "getInfo", "Get the info on a user, by ID") {
+        val info = getInfo(args.first.id)
+        respondPublic("") {
+            title = "Info for ${args.first.username}"
+            description = """
+                ID: ${info.id}
+                Username: ${info.username}
+                Real name: ${info.realName}
+                Location: ${info.location}
+            """.trimIndent()
         }
     }
     slash("updateInfo") {
