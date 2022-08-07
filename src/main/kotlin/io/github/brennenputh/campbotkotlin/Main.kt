@@ -18,6 +18,7 @@ fun main() {
         prefix { "&" }
         configure {
             commandReaction = null
+            dualRegistry = false
             theme = java.awt.Color(0, 255, 0)
         }
         presence {
