@@ -4,9 +4,11 @@ import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.getChannelOf
 import dev.kord.core.entity.channel.TextChannel
+import dev.kord.core.event.guild.MemberJoinEvent
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.rest.request.KtorRequestException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import me.jakejmattson.discordkt.dsl.listeners
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -18,6 +20,17 @@ val googleRegex = Regex("[Gg]+[Oo]+[Gg]+[Ll]+[Ee]+")
 
 var lastPunishmentThreadTimestamp: Long = 0
 var lastPrayerRequestTimestamp: Long = 0
+
+@Suppress("unused")
+fun memberJoinListener() = listeners {
+    on<MemberJoinEvent> {
+        guild.getChannelOf<TextChannel>(config.generalChannelId).createEmbed {
+            title = "Welcome ${member.username}!"
+            description = "Please state your real name so that we know who you are.\nIf you would like, you can also use the /nickname command to change your nickname to your real name."
+        }
+        guild.invites.filter { invite -> invite.uses > 0 }.collect { it.delete("Invite was used.") }
+    }
+}
 
 @Suppress("unused")
 fun messageListener() = listeners {

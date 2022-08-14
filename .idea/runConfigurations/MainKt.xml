@@ -2,6 +2,7 @@
   <configuration default="false" name="MainKt" type="JetRunConfigurationType" nameIsGenerated="true">
     <envs>
       <env name="dev" value="true" />
+      <env name="GENERAL_CHANNEL_ID" value="774814741038235650" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="io.github.brennenputh.campbotkotlin.MainKt" />
     <module name="campbot.main" />

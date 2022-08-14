@@ -29,12 +29,21 @@ class Configuration {
         }
     }
 
-    val prayerRequestsChannelId: Snowflake get() {
-        return getSnowflake("PRAYER_REQUESTS_CHANNEL_ID") ?: run {
-            logger.error("PRAYER_REQUESTS_CHANNEL_ID environment variable not set")
-            Snowflake.min
+    val prayerRequestsChannelId: Snowflake
+        get() {
+            return getSnowflake("PRAYER_REQUESTS_CHANNEL_ID") ?: run {
+                logger.error("PRAYER_REQUESTS_CHANNEL_ID environment variable not set")
+                Snowflake.min
+            }
         }
-    }
+
+    val generalChannelId: Snowflake
+        get() {
+            return getSnowflake("GENERAL_CHANNEL_ID") ?: run {
+                logger.error("GENERAL_CHANNEL_ID environment variable not set")
+                Snowflake.min
+            }
+        }
 
     private fun getSnowflake(name: String): Snowflake? = dotenv[name]?.toLong()?.let { Snowflake(it) }
 }
