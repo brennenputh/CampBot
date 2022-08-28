@@ -3,7 +3,6 @@ package io.github.brennenputh.campbotkotlin
 import dev.kord.common.annotation.KordPreview
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
-import io.github.brennenputh.campbotkotlin.pictures.loadPictureCache
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

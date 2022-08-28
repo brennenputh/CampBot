@@ -1,14 +1,10 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package io.github.brennenputh.campbotkotlin.pictures
+package io.github.brennenputh.campbotkotlin
 
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.entity.Attachment
 import dev.kord.rest.builder.message.EmbedBuilder
-import io.github.brennenputh.campbotkotlin.EMBED_GREEN
-import io.github.brennenputh.campbotkotlin.PathAsStringSerializer
-import io.github.brennenputh.campbotkotlin.getDataDirectory
-import io.github.brennenputh.campbotkotlin.getErrorEmbed
 import kotlinx.coroutines.delay
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -24,13 +20,13 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.URL
 import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
-    slash("upload") {
-        description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff"
+    slash("upload", description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff") {
         execute(ChoiceArg("category", "The category the picture should go in.", choices = getCategories()), AttachmentArg("picture")) {
             if (!getCategories().contains(args.first)) {
                 respond(getErrorEmbed("That category does not exist."))
@@ -40,11 +36,10 @@ fun pictureCommands() = commands("Pictures") {
             respondPublic("", uploadWithMessage(args.first, args.second))
         }
     }
-    slash("post") {
-        description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1"
+    slash("post", description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1") {
         execute(ChoiceArg("category", "The category the picture should go in.", choices = getCategories()), IntegerArg("number", "The number of pictures the bot should post.").optional(1)) {
-            if (args.second > 20) {
-                respond(getErrorEmbed("Too many files requested.  Limit is 20."))
+            if (args.second > 50) {
+                respond(getErrorEmbed("Too many files requested.  Limit is 50."))
                 return@execute
             }
             if (!getCategories().contains(args.first)) {
@@ -112,6 +107,10 @@ private val json = Json { prettyPrint = true }
 fun loadPictureCache() {
     pictureCache.clear()
     pictureCache.addAll(json.decodeFromStream<List<Picture>>(FileInputStream(picturesDirectory.resolve("cache.json").toFile())))
+
+    // Scan to make sure those pictures haven't been deleted
+    pictureCache.removeIf { !it.path.exists() }
+    json.encodeToStream(pictureCache.toList(), FileOutputStream(picturesDirectory.resolve("cache.json").toFile()))
 }
 
 private fun addToPictureCache(picture: Picture) {
