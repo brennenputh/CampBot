@@ -19,8 +19,7 @@ import kotlin.random.Random
 
 @Suppress("unused")
 fun quoteSlashCommands() = commands("Quotes") {
-    slash("createquote") {
-        description = "Create a quote."
+    slash("createquote", description = "Create a quote.") {
         execute(AnyArg(name = "content"), AnyArg(name = "author")) {
             respondPublic("", createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
         }
@@ -36,20 +35,17 @@ fun quoteSlashCommands() = commands("Quotes") {
         }
         respondPublic("", createQuoteWithMessage(authorName, args.first.content, "${author.username}#${author.discriminator}"))
     }
-    slash("quote") {
-        description = "Get a quote."
+    slash("quote", description = "Get a quote.") {
         execute(IntegerArg(name = "quoteNumber")) {
             respondPublic("", getQuoteMessageForNumber(args.first))
         }
     }
-    slash("randomquote") {
-        description = "Get a random quote."
+    slash("randomquote", description = "Get a random quote.") {
         execute {
             respondPublic("", getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1))
         }
     }
-    slash("search") {
-        description = "Search for a phrase in the quotes file."
+    slash("search", description = "Search for a phrase in the quotes file.") {
         execute(AnyArg("phrase")) {
             val quotes = search(args.first)
             if (quotes.isNotEmpty()) {

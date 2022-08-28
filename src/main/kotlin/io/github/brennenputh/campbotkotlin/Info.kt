@@ -30,8 +30,7 @@ fun slashInfoCommands() = commands("info") {
             """.trimIndent()
         }
     }
-    slash("updateInfo") {
-        description = "Update the info the bot has on you."
+    slash("updateInfo", description = "Update the info the bot has on you.") {
         execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), AnyArg("setpoint")) {
             val info = getInfo(author.id)
             info.id = author.id.toString()
@@ -48,9 +47,7 @@ fun slashInfoCommands() = commands("info") {
             }
         }
     }
-    slash("executiveUpdateInfo") {
-        requiredPermissions = Permissions(Permission.Administrator)
-        description = "Bot-owner only.  Allows updating the info of any user."
+    slash("executiveUpdateInfo", description = "Administrator only.  Allows updating the info of any user.", requiredPermissions = Permissions(Permission.Administrator)) {
         execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), UserArg("user"), AnyArg("setpoint")) {
             val info = getInfo(args.second.id)
             info.id = args.second.id.toString()

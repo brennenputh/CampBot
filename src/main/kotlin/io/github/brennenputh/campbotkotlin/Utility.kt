@@ -6,8 +6,7 @@ import me.jakejmattson.discordkt.commands.commands
 
 @Suppress("unused")
 fun userUtilityCommands() = commands("Utility") {
-    slash("quotesfile") {
-        description = "Get the quotes file from the bot."
+    slash("quotesfile", description = "Get the quotes file from the bot.") {
         execute {
             interaction?.respondEphemeral {
                 embed {
