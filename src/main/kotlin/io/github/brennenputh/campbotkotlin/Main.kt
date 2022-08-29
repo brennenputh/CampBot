@@ -1,14 +1,9 @@
 package io.github.brennenputh.campbotkotlin
 
 import dev.kord.common.annotation.KordPreview
-import dev.kord.common.entity.Snowflake
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
-import kotlinx.coroutines.flow.toList
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import kotlinx.serialization.json.encodeToStream
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -35,22 +30,6 @@ fun main() {
         }
         onStart {
             loadPictureCache()
-
-            // Fix bad data choices
-            val quotes = Json.decodeFromStream<List<OldQuote>>(quoteFile.inputStream())
-            val members = kord.getGuild(Snowflake(757774334478778508))?.members?.toList() ?: throw RuntimeException("Couldn't get members????")
-            val mutableQuotes = quotes.toMutableList().map { oldQuote ->
-                if (oldQuote.quotedBy != "Unknown") {
-                    val memberId = try {
-                        members.first { it.username == oldQuote.quotedBy.split("#")[0] }.id
-                    } catch (e: Exception) {
-                        return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, Snowflake.min)
-                    }
-                    return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, memberId)
-                }
-                return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, Snowflake.min)
-            }
-            Json.encodeToStream(mutableQuotes.toList(), quoteFile.outputStream())
 
             logger.info("Bot started.")
         }

@@ -93,7 +93,7 @@ fun quoteSlashCommands() = commands("Quotes") {
     }
 }
 
-val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
+private val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
 
 private fun getQuotes(): List<Quote> = Json.decodeFromStream(quoteFile.inputStream())
 
@@ -149,6 +149,3 @@ fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = find
 
 @Serializable
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake)
-
-@Serializable
-class OldQuote(val number: Int, val author: String, val content: String, val quotedBy: String = "Unknown")
