@@ -151,4 +151,4 @@ fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = find
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake)
 
 @Serializable
-class OldQuote(val number: Int, val author: String, val content: String, val quotedBy: String)
+class OldQuote(val number: Int, val author: String, val content: String, val quotedBy: String = "Unknown")
