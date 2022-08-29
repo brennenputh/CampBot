@@ -40,7 +40,7 @@ fun main() {
             val quotes = Json.decodeFromStream<List<OldQuote>>(quoteFile.inputStream())
             val mutableQuotes = quotes.toMutableList().map {
                 if (it.quotedBy != "Unknown") {
-                    val memberId = kord.getGuild(Snowflake(696516360074952786))?.getMembers(it.quotedBy.split("#")[0])?.first()?.id ?: Snowflake.min
+                    val memberId = kord.getGuild(Snowflake(757774334478778508))?.getMembers(it.quotedBy.split("#")[0])?.first()?.id ?: Snowflake.min
                     return@map Quote(it.number, it.content, it.author, memberId)
                 }
                 return@map Quote(it.number, it.content, it.author, Snowflake.min)
