@@ -3,7 +3,9 @@
 package io.github.brennenputh.campbotkotlin
 
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.core.entity.User
 import dev.kord.rest.builder.message.EmbedBuilder
 import dev.kord.x.emoji.Emojis
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -21,7 +23,7 @@ import kotlin.random.Random
 fun quoteSlashCommands() = commands("Quotes") {
     slash("createquote", description = "Create a quote.") {
         execute(AnyArg(name = "content"), AnyArg(name = "author")) {
-            respondPublic("", createQuoteWithMessage(args.second, args.first, "${author.username}#${author.discriminator}"))
+            respondPublic("", createQuoteWithMessage(args.second, args.first, author.id))
         }
     }
     message("Create Quote", "createquotemessage", "Create a quote with a message.") {
@@ -33,7 +35,7 @@ fun quoteSlashCommands() = commands("Quotes") {
             respond(getErrorEmbed("No recorded name for this user.\nAuthor must run `&updateInfo realName (name)` first."))
             return@message
         }
-        respondPublic("", createQuoteWithMessage(authorName, args.first.content, "${author.username}#${author.discriminator}"))
+        respondPublic("", createQuoteWithMessage(authorName, args.first.content, author.id))
     }
     slash("quote", description = "Get a quote.") {
         execute(IntegerArg(name = "quoteNumber")) {
@@ -91,13 +93,13 @@ fun quoteSlashCommands() = commands("Quotes") {
     }
 }
 
-private val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
+val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
 
 private fun getQuotes(): List<Quote> = Json.decodeFromStream(quoteFile.inputStream())
 
 fun findQuote(number: Int): Quote? = getQuotes().find { it.number == number }
 
-fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): Int {
+fun createQuote(author: String, content: String, quotedBy: Snowflake = Snowflake.min): Int {
     val quoteNumber = quoteTotal() + 1
     val quote = Quote(quoteNumber, author, content, quotedBy)
 
@@ -109,7 +111,7 @@ fun createQuote(author: String, content: String, quotedBy: String = "Unknown"): 
     return quoteNumber
 }
 
-fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "Unknown"): suspend (EmbedBuilder) -> Unit {
+fun createQuoteWithMessage(author: String, content: String, quotedBy: Snowflake): suspend (EmbedBuilder) -> Unit {
     val quoteNumber = createQuote(author, content, quotedBy)
     return {
         it.apply {
@@ -118,6 +120,14 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: String = "
             color = EMBED_GREEN
         }
     }
+}
+
+fun editQuote(quoteNumber: Int, newContent: String? = null, newAuthor: String? = null, requestedBy: User) {
+    val quotes = getQuotes().toMutableList()
+    val quote = quotes.filter { it.number == quoteNumber }[0]
+    val newQuote = Quote(quoteNumber, newContent ?: quote.content, newAuthor ?: quote.author, requestedBy.id)
+    quotes.remove(quote)
+    quotes.add(newQuote)
 }
 
 private fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
@@ -138,4 +148,7 @@ fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
 fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
 
 @Serializable
-class Quote(val number: Int, val author: String, val content: String, val quotedBy: String = "")
+class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake)
+
+@Serializable
+class OldQuote(val number: Int, val author: String, val content: String, val quotedBy: String)
