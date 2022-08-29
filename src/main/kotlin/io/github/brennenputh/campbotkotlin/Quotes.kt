@@ -91,6 +91,20 @@ fun quoteSlashCommands() = commands("Quotes") {
             }
         }
     }
+    slash("editquote", description = "Edit a quote.  This only works if you are the author of the quote you are editing.") {
+        execute(IntegerArg("quoteNumber"), AnyArg("content").optionalNullable(), AnyArg("author").optionalNullable()) {
+            if (findQuote(args.first)?.isAuthor(author) == true) {
+                editQuote(args.first, args.second, args.third)
+                val newQuote = findQuote(args.first)!!
+                respondPublic {
+                    title = "Quote Edited: #${args.first}"
+                    description = newQuote.content + " - " + newQuote.author
+                }
+            } else {
+                respond("", getErrorEmbed("You are not the recorded author of this quote."))
+            }
+        }
+    }
 }
 
 private val quoteFile = getDataDirectory().resolve("quotes.json").toFile()
@@ -122,12 +136,14 @@ fun createQuoteWithMessage(author: String, content: String, quotedBy: Snowflake)
     }
 }
 
-fun editQuote(quoteNumber: Int, newContent: String? = null, newAuthor: String? = null, requestedBy: User) {
+fun editQuote(quoteNumber: Int, newContent: String? = null, newAuthor: String? = null) {
     val quotes = getQuotes().toMutableList()
     val quote = quotes.filter { it.number == quoteNumber }[0]
-    val newQuote = Quote(quoteNumber, newContent ?: quote.content, newAuthor ?: quote.author, requestedBy.id)
+    val newQuote = Quote(quoteNumber, newAuthor ?: quote.author, newContent ?: quote.content, quote.quotedBy)
     quotes.remove(quote)
     quotes.add(newQuote)
+
+    Json.encodeToStream(quotes.toList(), quoteFile.outputStream())
 }
 
 private fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
@@ -148,4 +164,6 @@ fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
 fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
 
 @Serializable
-class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake)
+class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake) {
+    fun isAuthor(user: User): Boolean = user.id == quotedBy
+}
