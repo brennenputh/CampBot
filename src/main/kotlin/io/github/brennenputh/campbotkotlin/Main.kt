@@ -4,7 +4,7 @@ import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.Snowflake
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -38,16 +38,17 @@ fun main() {
 
             // Fix bad data choices
             val quotes = Json.decodeFromStream<List<OldQuote>>(quoteFile.inputStream())
-            val mutableQuotes = quotes.toMutableList().map {
-                if (it.quotedBy != "Unknown") {
+            val members = kord.getGuild(Snowflake(757774334478778508))?.members?.toList() ?: throw RuntimeException("Couldn't get members????")
+            val mutableQuotes = quotes.toMutableList().map { oldQuote ->
+                if (oldQuote.quotedBy != "Unknown") {
                     val memberId = try {
-                        kord.getGuild(Snowflake(757774334478778508))?.getMembers(it.quotedBy.split("#")[0])?.first()?.id ?: Snowflake.min
+                        members.first { it.username == oldQuote.quotedBy.split("#")[0] }.id
                     } catch (e: Exception) {
-                        return@map Quote(it.number, it.content, it.author, Snowflake.min)
+                        return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, Snowflake.min)
                     }
-                    return@map Quote(it.number, it.content, it.author, memberId)
+                    return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, memberId)
                 }
-                return@map Quote(it.number, it.content, it.author, Snowflake.min)
+                return@map Quote(oldQuote.number, oldQuote.content, oldQuote.author, Snowflake.min)
             }
             Json.encodeToStream(mutableQuotes.toList(), quoteFile.outputStream())
 
