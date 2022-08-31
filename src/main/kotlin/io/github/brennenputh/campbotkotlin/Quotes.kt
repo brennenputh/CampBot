@@ -4,6 +4,7 @@ package io.github.brennenputh.campbotkotlin
 
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.entity.User
 import dev.kord.rest.builder.message.EmbedBuilder
@@ -16,6 +17,7 @@ import kotlinx.serialization.json.encodeToStream
 import me.jakejmattson.discordkt.arguments.AnyArg
 import me.jakejmattson.discordkt.arguments.IntegerArg
 import me.jakejmattson.discordkt.commands.commands
+import me.jakejmattson.discordkt.extensions.fullName
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -39,12 +41,12 @@ fun quoteSlashCommands() = commands("Quotes") {
     }
     slash("quote", description = "Get a quote.") {
         execute(IntegerArg(name = "quoteNumber")) {
-            respondPublic("", getQuoteMessageForNumber(args.first))
+            respondPublic("", getQuoteMessageForNumber(args.first, author.kord))
         }
     }
     slash("randomquote", description = "Get a random quote.") {
         execute {
-            respondPublic("", getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1))
+            respondPublic("", getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1, author.kord))
         }
     }
     slash("search", description = "Search for a phrase in the quotes file.") {
@@ -150,18 +152,18 @@ private fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
 
 fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }
 
-fun getQuoteMessage(quote: Quote): suspend (EmbedBuilder) -> Unit = {
+fun getQuoteMessage(quote: Quote, kord: Kord): suspend (EmbedBuilder) -> Unit = {
     it.apply {
         title = "Quote #${quote.number}"
         description = "${quote.content} - ${quote.author}"
         footer {
-            text = "Quoted by: ${quote.quotedBy}"
+            text = "Quoted by: ${kord.getUser(quote.quotedBy)?.fullName ?: "Unknown"}"
         }
         color = EMBED_GREEN
     }
 }
 
-fun getQuoteMessageForNumber(number: Int): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it) } ?: getErrorEmbed("Quote not found.")
+fun getQuoteMessageForNumber(number: Int, kord: Kord): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it, kord) } ?: getErrorEmbed("Quote not found.")
 
 @Serializable
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake) {
