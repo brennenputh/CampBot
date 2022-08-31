@@ -39,7 +39,7 @@ fun messageListener() = listeners {
         // Check for inlined quotes in the message
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
-            message.channel.createEmbed { getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1])).invoke(this) }
+            message.channel.createEmbed { getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1]), kord).invoke(this) }
         }
     }
     // Auto-create threads in prayer requests
