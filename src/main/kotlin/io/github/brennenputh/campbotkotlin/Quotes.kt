@@ -150,7 +150,7 @@ fun editQuote(quoteNumber: Int, newContent: String? = null, newAuthor: String? =
 
 private fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
 
-fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }
+fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }.sortedBy { FuzzySearch.tokenSetRatio(it.content, searchTerm) }
 
 fun getQuoteMessage(quote: Quote, kord: Kord): suspend (EmbedBuilder) -> Unit = {
     it.apply {
