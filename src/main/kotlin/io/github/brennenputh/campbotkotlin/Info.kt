@@ -30,8 +30,12 @@ fun slashInfoCommands() = commands("info") {
             """.trimIndent()
         }
     }
+
     slash("updateInfo", description = "Update the info the bot has on you.") {
-        execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), AnyArg("setpoint")) {
+        execute(
+            ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"),
+            AnyArg("setpoint")
+        ) {
             val info = getInfo(author.id)
             info.id = author.id.toString()
             info.username = author.username
@@ -47,8 +51,17 @@ fun slashInfoCommands() = commands("info") {
             }
         }
     }
-    slash("executiveUpdateInfo", description = "Administrator only.  Allows updating the info of any user.", requiredPermissions = Permissions(Permission.Administrator)) {
-        execute(ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"), UserArg("user"), AnyArg("setpoint")) {
+
+    slash(
+        "executiveUpdateInfo",
+        description = "Administrator only.  Allows updating the info of any user.",
+        requiredPermissions = Permissions(Permission.Administrator)
+    ) {
+        execute(
+            ChoiceArg("infoValue", "The info you would like to update.", "realName", "location"),
+            UserArg("user"),
+            AnyArg("setpoint")
+        ) {
             val info = getInfo(args.second.id)
             info.id = args.second.id.toString()
             info.username = args.second.username
@@ -77,7 +90,8 @@ data class UserInfo(
 val infoFile: File = getDataDirectory().resolve("userInfo.json").toFile()
 
 fun getInfo(userId: Snowflake): UserInfo {
-    return Json.decodeFromStream<List<UserInfo>>(infoFile.inputStream()).firstOrNull { it.id == userId.toString() } ?: UserInfo(userId.toString(), "", "", "")
+    return Json.decodeFromStream<List<UserInfo>>(infoFile.inputStream()).firstOrNull { it.id == userId.toString() }
+        ?: UserInfo(userId.toString(), "", "", "")
 }
 
 private fun updateInfo(userId: Snowflake, info: UserInfo) {

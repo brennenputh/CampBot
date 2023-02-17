@@ -9,25 +9,26 @@ class Configuration {
         ignoreIfMissing = true
     }
 
-    // there should really only be one bot token ever and the value is only used once
-    val botToken: String get() {
-        return dotenv["BOT_TOKEN"] ?: throw IllegalStateException("BOT_TOKEN is not set")
-    }
-
-
-    val chaosRoleId: Snowflake get() {
-        return getSnowflake("CHAOS_ROLE_ID") ?: run {
-            logger.error("CHAOS_ROLE_ID environment variable not set")
-            Snowflake.min
+    val botToken: String
+        get() {
+            return dotenv["BOT_TOKEN"] ?: throw IllegalStateException("BOT_TOKEN is not set")
         }
-    }
 
-    val chaosChannelId: Snowflake get() {
-        return getSnowflake("CHAOS_CHANNEL_ID") ?: run {
-            logger.error("CHAOS_CHANNEL_ID environment variable not set")
-            Snowflake.min
+    val chaosRoleId: Snowflake
+        get() {
+            return getSnowflake("CHAOS_ROLE_ID") ?: run {
+                logger.error("CHAOS_ROLE_ID environment variable not set")
+                Snowflake.min
+            }
         }
-    }
+
+    val chaosChannelId: Snowflake
+        get() {
+            return getSnowflake("CHAOS_CHANNEL_ID") ?: run {
+                logger.error("CHAOS_CHANNEL_ID environment variable not set")
+                Snowflake.min
+            }
+        }
 
     val prayerRequestsChannelId: Snowflake
         get() {

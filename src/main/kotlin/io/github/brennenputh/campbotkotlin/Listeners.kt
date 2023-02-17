@@ -26,7 +26,8 @@ fun memberJoinListener() = listeners {
     on<MemberJoinEvent> {
         guild.getChannelOf<TextChannel>(config.generalChannelId).createEmbed {
             title = "Welcome ${member.username}!"
-            description = "Please state your real name so that we know who you are.\nIf you would like, you can also use the /nickname command to change your nickname to your real name."
+            description =
+                "Please state your real name so that we know who you are.\nIf you would like, you can also use the /nickname command to change your nickname to your real name."
         }
         guild.invites.filter { invite -> invite.uses > 0 }.collect { it.delete("Invite was used.") }
     }
@@ -39,7 +40,12 @@ fun messageListener() = listeners {
         // Check for inlined quotes in the message
         val quoteInlines = quoteInlineRegex.findAll(message.content)
         for (inline in quoteInlines) {
-            message.channel.createEmbed { getQuoteMessageForNumber(Integer.parseInt(inline.groupValues[1]), kord).invoke(this) }
+            message.channel.createEmbed {
+                getQuoteMessageForNumber(
+                    Integer.parseInt(inline.groupValues[1]),
+                    kord
+                ).invoke(this)
+            }
         }
     }
     // Auto-create threads in prayer requests
@@ -49,7 +55,9 @@ fun messageListener() = listeners {
         if (System.nanoTime() - lastPrayerRequestTimestamp > 10 * 6e+10) {
             (message.getChannel() as TextChannel).startPublicThreadWithMessage(
                 message.id,
-                "${message.getAuthorAsMember()?.displayName} ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))}"
+                "${message.getAuthorAsMember()?.displayName} ${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM dd yyyy"))
+                }"
             )
             lastPrayerRequestTimestamp = System.nanoTime()
         }
@@ -71,11 +79,14 @@ fun messageListener() = listeners {
                     description = grabbedMessage?.content
                 }
             } catch (e: KtorRequestException) {
-                val error = message.channel.createEmbed { getErrorEmbed(when(e.httpResponse.status.value) {
-                    403 -> "No access to linked message."
-                    404 -> "Linked message not found."
-                    else -> "Could not get message from link."
-                }).invoke(this)
+                val error = message.channel.createEmbed {
+                    getErrorEmbed(
+                        when (e.httpResponse.status.value) {
+                            403 -> "No access to linked message."
+                            404 -> "Linked message not found."
+                            else -> "Could not get message from link."
+                        }
+                    ).invoke(this)
                 }
                 delay(5000)
                 error.delete()
@@ -84,7 +95,7 @@ fun messageListener() = listeners {
     }
     // Chaos rules implementation
     on<MessageCreateEvent> {
-        if(message.interaction != null) return@on
+        if (message.interaction != null) return@on
         if (message.author!!.isBot) return@on
         if (message.channelId != config.chaosChannelId) return@on
 

@@ -39,4 +39,4 @@ fun main() {
     }
 }
 
-fun getDataDirectory(): Path = if(System.getenv("dev") != "true") File("/data").toPath() else File(".").toPath()
+fun getDataDirectory(): Path = if (System.getenv("dev") != "true") File("/data").toPath() else File(".").toPath()

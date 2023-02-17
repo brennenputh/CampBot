@@ -28,6 +28,7 @@ fun quoteSlashCommands() = commands("Quotes") {
             respondPublic("", createQuoteWithMessage(args.second, args.first, author.id))
         }
     }
+
     message("Create Quote", "createquotemessage", "Create a quote with a message.") {
         val authorName = args.first.author?.id?.let { getInfo(it) }?.realName ?: run {
             respond("", getErrorEmbed("Could not find author.  Is this a bot or webhook?"))
@@ -39,16 +40,19 @@ fun quoteSlashCommands() = commands("Quotes") {
         }
         respondPublic("", createQuoteWithMessage(authorName, args.first.content, author.id))
     }
+
     slash("quote", description = "Get a quote.") {
         execute(IntegerArg(name = "quoteNumber")) {
             respondPublic("", getQuoteMessageForNumber(args.first, author.kord))
         }
     }
+
     slash("randomquote", description = "Get a random quote.") {
         execute {
             respondPublic("", getQuoteMessageForNumber(Random.nextInt(quoteTotal()) + 1, author.kord))
         }
     }
+
     slash("search", description = "Search for a phrase in the quotes file.") {
         execute(AnyArg("phrase")) {
             val quotes = search(args.first)
@@ -93,7 +97,11 @@ fun quoteSlashCommands() = commands("Quotes") {
             }
         }
     }
-    slash("editquote", description = "Edit a quote.  This only works if you are the author of the quote you are editing.") {
+
+    slash(
+        "editquote",
+        description = "Edit a quote.  This only works if you are the author of the quote you are editing."
+    ) {
         execute(IntegerArg("quoteNumber"), AnyArg("content").optionalNullable(), AnyArg("author").optionalNullable()) {
             if (findQuote(args.first)?.isAuthor(author) == true) {
                 editQuote(args.first, args.second, args.third)
@@ -150,7 +158,12 @@ fun editQuote(quoteNumber: Int, newContent: String? = null, newAuthor: String? =
 
 private fun quoteTotal() = getQuotes().maxOfOrNull { it.number } ?: 0
 
-fun search(searchTerm: String): List<Quote> = getQuotes().filter { it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(it.content, searchTerm) > 50 }.sortedBy { FuzzySearch.tokenSetRatio(it.content, searchTerm) }
+fun search(searchTerm: String): List<Quote> = getQuotes().filter {
+    it.author.contains(searchTerm, true) || FuzzySearch.tokenSetRatio(
+        it.content,
+        searchTerm
+    ) > 50
+}.sortedBy { FuzzySearch.tokenSetRatio(it.content, searchTerm) }
 
 fun getQuoteMessage(quote: Quote, kord: Kord): suspend (EmbedBuilder) -> Unit = {
     it.apply {
@@ -163,7 +176,8 @@ fun getQuoteMessage(quote: Quote, kord: Kord): suspend (EmbedBuilder) -> Unit = 
     }
 }
 
-fun getQuoteMessageForNumber(number: Int, kord: Kord): suspend (EmbedBuilder) -> Unit = findQuote(number)?.let { getQuoteMessage(it, kord) } ?: getErrorEmbed("Quote not found.")
+fun getQuoteMessageForNumber(number: Int, kord: Kord): suspend (EmbedBuilder) -> Unit =
+    findQuote(number)?.let { getQuoteMessage(it, kord) } ?: getErrorEmbed("Quote not found.")
 
 @Serializable
 class Quote(val number: Int, val author: String, val content: String, val quotedBy: Snowflake) {

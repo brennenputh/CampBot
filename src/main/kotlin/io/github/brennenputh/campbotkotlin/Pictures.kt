@@ -27,7 +27,10 @@ import kotlin.random.nextInt
 @Suppress("unused")
 fun pictureCommands() = commands("Pictures") {
     slash("upload", description = "Upload a file to the bot.  Expects an attachment.  Example: &upload staff") {
-        execute(ChoiceArg("category", "The category the picture should go in.", choices = getCategories()), AttachmentArg("picture")) {
+        execute(
+            ChoiceArg("category", "The category the picture should go in.", choices = getCategories()),
+            AttachmentArg("picture")
+        ) {
             if (!getCategories().contains(args.first)) {
                 respond(getErrorEmbed("That category does not exist."))
                 return@execute
@@ -36,8 +39,15 @@ fun pictureCommands() = commands("Pictures") {
             respondPublic("", uploadWithMessage(args.first, args.second))
         }
     }
-    slash("post", description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1") {
-        execute(ChoiceArg("category", "The category the picture should go in.", choices = getCategories()), IntegerArg("number", "The number of pictures the bot should post.").optional(1)) {
+
+    slash(
+        "post",
+        description = "Get a file.  Append number to the end for posting more than one (limit 20).  Example: &post staff 1"
+    ) {
+        execute(
+            ChoiceArg("category", "The category the picture should go in.", choices = getCategories()),
+            IntegerArg("number", "The number of pictures the bot should post.").optional(1)
+        ) {
             if (args.second > 50) {
                 respond(getErrorEmbed("Too many files requested.  Limit is 50."))
                 return@execute
@@ -66,7 +76,8 @@ fun pictureCommands() = commands("Pictures") {
 
 val picturesDirectory: Path = getDataDirectory().resolve("pictures")
 
-private fun getCategories(): Array<String> = picturesDirectory.toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
+private fun getCategories(): Array<String> =
+    picturesDirectory.toFile().listFiles()!!.filter { it.isDirectory }.map { it.name }.toTypedArray()
 
 /**
  * @param category The category of the picture
@@ -106,7 +117,13 @@ private val json = Json { prettyPrint = true }
 
 fun loadPictureCache() {
     pictureCache.clear()
-    pictureCache.addAll(json.decodeFromStream<List<Picture>>(FileInputStream(picturesDirectory.resolve("cache.json").toFile())))
+    pictureCache.addAll(
+        json.decodeFromStream<List<Picture>>(
+            FileInputStream(
+                picturesDirectory.resolve("cache.json").toFile()
+            )
+        )
+    )
 
     // Scan to make sure those pictures haven't been deleted
     pictureCache.removeIf { !it.path.exists() }
@@ -133,7 +150,8 @@ private fun randomPicture(category: String): Picture {
     recentlyPostedPictures.add(selectedFileIndex)
     if (recentlyPostedPictures.size > files.size / 2) recentlyPostedPictures.clear()
 
-    return pictureCache.find { it.path == files[selectedFileIndex].toPath() } ?: Picture(files[selectedFileIndex].toPath(), null)
+    return pictureCache.find { it.path == files[selectedFileIndex].toPath() }
+        ?: Picture(files[selectedFileIndex].toPath(), null)
 }
 
 @Serializable
