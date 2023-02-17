@@ -3,7 +3,6 @@ package io.github.brennenputh.campbotkotlin
 import dev.kord.common.annotation.KordPreview
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
-import kotlinx.serialization.ExperimentalSerializationApi
 import me.jakejmattson.discordkt.dsl.bot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,7 +13,7 @@ val config = Configuration()
 
 val logger: Logger = LoggerFactory.getLogger("campbot")
 
-@OptIn(PrivilegedIntent::class, ExperimentalSerializationApi::class)
+@OptIn(PrivilegedIntent::class)
 @KordPreview
 fun main() {
     bot(config.botToken) {

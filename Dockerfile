@@ -1,4 +1,4 @@
-FROM openjdk:16-jdk-slim
+FROM openjdk:18-jdk-slim
 
 COPY build/libs/campbot-*-all.jar /usr/local/lib/campbot.jar
 
