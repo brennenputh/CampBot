@@ -14,18 +14,10 @@ class Configuration {
             return dotenv["BOT_TOKEN"] ?: throw IllegalStateException("BOT_TOKEN is not set")
         }
 
-    val chaosRoleId: Snowflake
+    val vcRoleId: Snowflake
         get() {
-            return getSnowflake("CHAOS_ROLE_ID") ?: run {
-                logger.error("CHAOS_ROLE_ID environment variable not set")
-                Snowflake.min
-            }
-        }
-
-    val chaosChannelId: Snowflake
-        get() {
-            return getSnowflake("CHAOS_CHANNEL_ID") ?: run {
-                logger.error("CHAOS_CHANNEL_ID environment variable not set")
+            return getSnowflake("VC_ROLE_ID") ?: run {
+                logger.error("VC_ROLE_ID environment variable not set")
                 Snowflake.min
             }
         }
