@@ -23,8 +23,8 @@ dependencies {
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+kotlin {
+    jvmToolchain(17)
 }
 
 application {
