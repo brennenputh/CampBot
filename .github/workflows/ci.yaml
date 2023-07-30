@@ -14,13 +14,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: gradle/gradle-build-action@v1
+      - uses: gradle/gradle-build-action@v2
         with:
           arguments: shadowJar
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login
         env:
           GITHUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
