@@ -24,7 +24,7 @@ fun memberJoinListener() = listeners {
         guild.getChannelOf<TextChannel>(config.generalChannelId).createEmbed {
             title = "Welcome ${member.username}!"
             description =
-                "Please state your real name so that we know who you are.\nIf you would like, you can also use the /nickname command to change your nickname to your real name."
+                "Please state your real name so that we know who you are.\nAlso, please state your current position on camp (LIT, JL, CL, SL)."
         }
         guild.invites.filter { invite -> invite.uses > 0 }.collect { it.delete("Invite was used.") }
     }

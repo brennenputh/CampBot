@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     java
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.21"
-    id("com.github.johnrengelman.shadow") version ("7.0.0")
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
+    id("com.github.johnrengelman.shadow") version ("8.1.1")
 }
 
 group = "io.github.amerebagatelle"
@@ -19,12 +19,12 @@ repositories {
 dependencies {
     implementation("me.jakejmattson:DiscordKt:0.23.4")
 
-    implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin:0.9.0")
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "18"
+    kotlinOptions.jvmTarget = "11"
 }
 
 application {
